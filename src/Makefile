@@ -42,13 +42,13 @@ lex.yy.c:
 	$(CC) $(CFLAGS) -c $<  -o $@
 
 clean:
-	rm *.o
-	rm $(TARGET)
-	rm ../$(TARGET)
+	rm -f *.o
+	rm -f $(TARGET)
+	rm -f ../$(TARGET)
 
 clean_parser:
-	rm lex.yy.c parser.tab.c
-	rm lex.yy.o parser.tab.o
-	rm parser.tab.h
+	rm -f lex.yy.c parser.tab.c
+	rm -f lex.yy.o parser.tab.o
+	rm -f parser.tab.h
 
 clean_all: clean clean_parser
