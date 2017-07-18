@@ -8,6 +8,7 @@
 
 list* list_New() {
 	list* l = malloc(sizeof(list));
+    l->length = 1;
 	l->element = NULL;
 	l->next = NULL;
 	return l;
@@ -33,6 +34,7 @@ list* list_PushBack(list *l, void *element) {
 	list *last = NULL;
 	/* find the last list element */
 	for(list *it = l; !list_IsEmpty(it); it = list_Tail(it)) {
+        it->length++;
 		last = it;
 	}
 	list *newListElement = list_New();
@@ -65,6 +67,9 @@ void list_Delete(list **_l) {
     *_l = NULL;
 }
 
+void list_Sort(list *l){
+}
+
 void list_Print(list *l){
     if(l == NULL){
         printf("empty list");
@@ -72,6 +77,7 @@ void list_Print(list *l){
     }
 
 	if(!list_IsEmpty(l)) {
+        printf("Length: %d ", l->length);
 		for(list *it = l; !list_IsEmpty(it); it = list_Tail(it)) {
 			tree_Print((tree*) list_Element(it));
             printf("\n");
@@ -225,16 +231,17 @@ void st_InsertEntry(char *name, symbol_table **st){
     symbol_table *entry = NULL;
     char *id = strdup(name);
 
-    HASH_FIND(hh, *st, &id, sizeof(char), entry);
+    HASH_FIND_STR(*st, id, entry);
     if(entry != NULL){
         entry->occurrences++;
         return;
     }
+    printf("New symbol entry: %s\n", name);
 
     entry = malloc(sizeof(symbol_table));
     entry->id = id;
     entry->occurrences = 1;
-    HASH_ADD(hh, *st, id, sizeof(char), entry);
+    HASH_ADD_STR(*st, id, entry);
     return;
 }
 

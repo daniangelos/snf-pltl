@@ -1277,7 +1277,7 @@ yyreduce:
         case 2:
 #line 62 "parser.y" /* yacc.c:1646  */
     {
-			(yyval.clist) = list_New();
+			(yyval.clist) = NULL;
 		}
 #line 1283 "parser.tab.c" /* yacc.c:1646  */
     break;

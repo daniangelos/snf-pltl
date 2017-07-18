@@ -60,7 +60,7 @@ tree* buildTreeFromAtLeastTwoList(int op, list *l);
 
 formulae:
 		{
-			$$ = list_New();
+			$$ = NULL;
 		}
 	| formulae formula
 		{

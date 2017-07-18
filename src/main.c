@@ -20,19 +20,17 @@ int main(int argc, char** argv) {
 
 	yyparse();
 
-    printf("Formulae before: ");
-    list_Print(formula_list);
-
     if(formula_list == NULL){
         printf("No formulae found!\n");
         return 1;
     }
 
     /*simplification(formula_list);*/
+    list_Sort(formula_list);
     snf();
 
     /*Printing read formulae and symbol table*/
-    printf("Formulae after: ");
+    printf("Formulae after:\n");
     list_Print(formula_list);
     printf("Symbol table: ");
     st_Print(st);

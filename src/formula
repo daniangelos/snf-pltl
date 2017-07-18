@@ -1,1 +1,3 @@
 sometime((p & q) <-> true)
+sometime((r & q & r & r) <-> false)
+
