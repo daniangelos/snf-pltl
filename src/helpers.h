@@ -57,9 +57,11 @@ list* list_Tail(list *l) ;
 void* list_Element(list *l) ;
 void* list_FirstElement(list *l) ;
 list* list_PushBack(list *l, void *element) ;
+void list_UnifyChildren(list **l, int op);
 list* list_List(void *element) ;
 void list_Delete(list **_l) ;
-void list_Sort(list *l);
+void mergesort(list** headRef);
+void list_Sort(list **l);
 void list_Print(list *l);
 
 /* Tree Functions */

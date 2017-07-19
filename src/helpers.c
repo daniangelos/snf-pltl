@@ -23,6 +23,7 @@ list* list_Tail(list *l) {
 }
 
 void* list_Element(list *l) {
+    if(l == NULL) return NULL;
 	return l->element;
 }
 
@@ -66,16 +67,196 @@ void list_Delete(list **_l) {
 	free(*_l);
     *_l = NULL;
 }
+void list_UnifyTail(list **l, list **tail, tree *element, int op){
+    (*l)->next = element->children; 
+    (*tail)->element = NULL;
+    list_Delete(tail);
+    *tail = (*l)->next;
+    (*tail)->length = element->children->length;
+    element->children = NULL;
+    tree_Delete(&element);
+    list_UnifyChildren(tail, op);
+    (*l)->next = *tail;
+    (*l)->length = 1 + (*tail)->length;
+}
 
-void list_Sort(list *l){
+void list_UnifyHead(list **l, tree* head, int op){
+    *l = head->children;
+    (*l)->length += head->children->length;
+    head->children = NULL;
+    tree_Delete(&head);
+}
+
+void list_UnifyChildren(list **l, int op){
+    if(*l == NULL) return;
+    tree *head = (*l)->element;
+    list *tail = list_Tail(*l);
+    tree *element = (tree*) tail->element;
+    int right = 0;
+
+    if(element->op == op){
+        list_UnifyTail(l, &tail, element, op);
+        right = 1;
+    }
+    if(head->op == op) {
+        list_UnifyHead(l, head, op);
+
+        // MERGE LISTS
+        list *last;
+        (*l)->length = 0;
+        for(list *it = *l; !list_IsEmpty(it); it = list_Tail(it)) {
+            (*l)->length++;
+            last = it;
+        }
+        last->next = tail;
+        (*l)->length += tail->length;
+    }
+
+
+    return;
+}
+
+void FrontBackSplit(list* source,
+          list** frontRef, list** backRef)
+{
+  list* fast;
+  list* slow;
+  if (source==NULL || source->next==NULL)
+  {
+    /* length < 2 cases */
+    *frontRef = source;
+    *backRef = NULL;
+  }
+  else
+  {
+    slow = source;
+    fast = source->next;
+ 
+    /* Advance 'fast' two nodes, and advance 'slow' one node */
+    while (fast != NULL)
+    {
+      fast = fast->next;
+      if (fast != NULL)
+      {
+        slow = slow->next;
+        fast = fast->next;
+      }
+    }
+ 
+    /* 'slow' is before the midpoint in the list, so split it in two
+      at that point. */
+    *frontRef = source;
+    *backRef = slow->next;
+    slow->next = NULL;
+  }
+}
+
+int formula_Compare(tree* a, tree* b){
+    if(a->op < b->op) return 1;
+    if(a->op > b->op) return 0;
+
+    tree *fsta = (tree*) list_Element(a->children);
+    tree *fstb = (tree*) list_Element(b->children);
+    tree *snda = NULL;
+    tree *sndb = NULL;
+int op = a->op;
+    switch(op){
+        case FALSE:
+        case TRUE:
+            return 1;
+        case NAME:
+            return (strcmp(a->id, b->id) <= 0);
+        case AND:
+        case AND_TEXT:
+        case OR:
+        case OR_TEXT:
+            return 1;
+        case EQUIVALENCE:
+            snda = (tree*) list_Tail(a->children)->element;
+            sndb = (tree*) list_Tail(b->children)->element;
+            return formula_Compare(fsta, fstb) && formula_Compare(snda, sndb);
+        case IMPLICATION:
+        case NEXT:
+        case ALWAYS:
+        case SOMETIME:
+        case UNTIL:
+        case UNLESS:
+        case NOT:
+            return formula_Compare(fsta, fstb);
+    }
+}
+
+list* SortedMerge(list* a, list* b)
+{
+  list* result = NULL;
+ 
+  /* Base cases */
+  if (a == NULL)
+     return(b);
+  else if (b==NULL)
+     return(a);
+ 
+  /* Pick either a or b, and recur */
+  if (formula_Compare((tree*)a->element, (tree*)b->element))
+  {
+     result = a;
+     result->next = SortedMerge(a->next, b);
+  }
+  else
+  {
+     result = b;
+     result->next = SortedMerge(a, b->next);
+  }
+  return(result);
+}
+
+void mergesort(list** headRef)
+{
+  list* head = *headRef;
+  list* a;
+  list* b;
+ 
+  /* Base case -- length 0 or 1 */
+  if ((head == NULL) || (head->next == NULL))
+  {
+    return;
+  }
+ 
+  /* Split head into 'a' and 'b' sublists */
+  FrontBackSplit(head, &a, &b); 
+ 
+  /* Recursively sort the sublists */
+  mergesort(&a);
+  mergesort(&b);
+ 
+  /* answer = merge the two sorted lists together */
+  *headRef = SortedMerge(a, b);
+}
+
+void list_Sort(list **l){
+    if(*l == NULL) return;
+
+    tree *element = (tree*) (*l)->element;
+    list *children = NULL;
+    if(element != NULL){
+        children = element->children;
+        if(element->op == AND || element->op == OR){
+            list_UnifyChildren(&children, element->op);
+            mergesort(&children);
+            ((tree*)(*l)->element)->children = children;
+        }
+        if(element->op == EQUIVALENCE){
+            mergesort(&children);
+            ((tree*)(*l)->element)->children = children;
+        }
+    }
+    
+    for(list *it = children; !list_IsEmpty(it); it = list_Tail(it)) {
+        list_Sort(&it);
+    }
 }
 
 void list_Print(list *l){
-    if(l == NULL){
-        printf("empty list");
-        return;
-    }
-
 	if(!list_IsEmpty(l)) {
         printf("Length: %d ", l->length);
 		for(list *it = l; !list_IsEmpty(it); it = list_Tail(it)) {
@@ -204,7 +385,7 @@ void tree_Print(tree *t)
 	}
 
 	if(!list_IsEmpty(tree_Children(t))) {
-		printf("(");
+		printf(" length: %d (", tree_Children(t)->length);
 		for(list *it = tree_Children(t); !list_IsEmpty(it); it = list_Tail(it)) {
 			tree_Print((tree*)list_Element(it));
 			if(!list_IsEmpty(list_Tail(it))) {
@@ -236,7 +417,6 @@ void st_InsertEntry(char *name, symbol_table **st){
         entry->occurrences++;
         return;
     }
-    printf("New symbol entry: %s\n", name);
 
     entry = malloc(sizeof(symbol_table));
     entry->id = id;

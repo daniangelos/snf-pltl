@@ -25,11 +25,17 @@ int main(int argc, char** argv) {
         return 1;
     }
 
+    printf("Formulae before:\n");
+    list_Print(formula_list);
+    printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
+
+    list_Sort(&formula_list);
+    mergesort(&formula_list);
     /*simplification(formula_list);*/
-    list_Sort(formula_list);
     snf();
 
     /*Printing read formulae and symbol table*/
+    printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
     printf("Formulae after:\n");
     list_Print(formula_list);
     printf("Symbol table: ");
