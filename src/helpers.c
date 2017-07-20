@@ -8,7 +8,6 @@
 
 list* list_New() {
 	list* l = malloc(sizeof(list));
-    l->length = 1;
 	l->element = NULL;
 	l->next = NULL;
 	return l;
@@ -35,7 +34,6 @@ list* list_PushBack(list *l, void *element) {
 	list *last = NULL;
 	/* find the last list element */
 	for(list *it = l; !list_IsEmpty(it); it = list_Tail(it)) {
-        it->length++;
 		last = it;
 	}
 	list *newListElement = list_New();
@@ -53,38 +51,43 @@ list* list_List(void *element) {
 	return list_PushBack(NULL, element);
 }
 
-void list_Delete(list **_l) {
-    list *l = *_l;
-	if(list_IsEmpty(l)) return;
+void list_Delete(list **l) {
+	if(list_IsEmpty(*l)) return;
 
-	for(list *it = list_Tail(l); !list_IsEmpty(it);) {
+    tree *element;
+
+	for(list *it = list_Tail(*l) ; !list_IsEmpty(it);) {
 		list *l2 = list_Tail(it);
-        tree_Delete((tree**) (&l->element));
+        element = (tree*) list_Element(it);
+        tree_Delete(&element);
+        it->element = element;
 		free(it);
 		it = l2;
 	}
 
-	free(*_l);
-    *_l = NULL;
+    element = ((tree*) list_Element(*l));
+    tree_Delete(&element);
+    (*l)->element = element;
+    free(*l);
+    *l = NULL;
+
 }
 void list_UnifyTail(list **l, list **tail, tree *element, int op){
     (*l)->next = element->children; 
     (*tail)->element = NULL;
     list_Delete(tail);
     *tail = (*l)->next;
-    (*tail)->length = element->children->length;
     element->children = NULL;
     tree_Delete(&element);
     list_UnifyChildren(tail, op);
     (*l)->next = *tail;
-    (*l)->length = 1 + (*tail)->length;
 }
 
 void list_UnifyHead(list **l, tree* head, int op){
     *l = head->children;
-    (*l)->length += head->children->length;
     head->children = NULL;
     tree_Delete(&head);
+    list_UnifyChildren(l, op);
 }
 
 int i = 0;
@@ -93,25 +96,22 @@ void list_UnifyChildren(list **l, int op){
     tree *head = (*l)->element;
     list *tail = list_Tail(*l);
     tree *element = (tree*) tail->element;
-    int right = 0;
 
     if(element->op == op){
         list_UnifyTail(l, &tail, element, op);
-        right = 1;
     }
     if(head->op == op) {
+        (*l)->element = NULL;
+        (*l)->next = NULL;
+        list_Delete(l);
         list_UnifyHead(l, head, op);
-        list_UnifyChildren(l, op);
 
         // MERGE LISTS
-        list *last;
-        (*l)->length = 0;
+        list *last = NULL;
         for(list *it = *l; !list_IsEmpty(it); it = list_Tail(it)) {
-            (*l)->length++;
             last = it;
         }
         last->next = tail;
-        (*l)->length += tail->length;
     }
 
 
@@ -198,6 +198,8 @@ int formula_Compare(tree* a, tree* b){
         case UNLESS:
         case NOT:
             return formula_Compare(fsta, fstb);
+        default:
+            return 0;
     }
 }
 
@@ -274,7 +276,6 @@ void list_Sort(list **l){
 
 void list_Print(list *l){
 	if(!list_IsEmpty(l)) {
-        printf("Length: %d ", l->length);
 		for(list *it = l; !list_IsEmpty(it); it = list_Tail(it)) {
 			tree_Print((tree*) list_Element(it));
             printf("\n");
@@ -426,6 +427,7 @@ void tree_Delete(tree **t) {
 		return;
 	}
     free((*t)->id);
+    (*t)->id = NULL;
     list_Delete(&((*t)->children));
     free(*t);
     *t = NULL;
@@ -440,6 +442,7 @@ void st_InsertEntry(char *name, symbol_table **st){
     HASH_FIND_STR(*st, id, entry);
     if(entry != NULL){
         entry->occurrences++;
+        free(id);
         return;
     }
 
@@ -456,4 +459,16 @@ void st_Print(symbol_table *st){
     for(it = st; it != NULL; it = it->hh.next){
         printf("Prop symbol: %s \tOccurrences: %d\n", it->id, it->occurrences);
     }
+}
+
+void st_Delete(symbol_table **st){
+    symbol_table *current, *tmp;
+
+    HASH_ITER(hh, *st, current, tmp) {
+        free(current->id);
+        HASH_DEL(*st,current);  /* delete; st dvances to next */
+        free(current);            /* optional- if you want to free  */
+    }
+
+    *st = NULL;
 }

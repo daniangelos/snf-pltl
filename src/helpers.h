@@ -29,7 +29,6 @@ typedef struct symbol_table symbol_table;
 /* singly linked list */
 /* the empty list is represted by the null pointer */
 struct list {
-    int length;
 	void *element;
 	list *next;
 };
@@ -83,5 +82,6 @@ void tree_Delete(tree **t);
 /* Symbol Table Functions */
 void st_InsertEntry(char *name, symbol_table **st);
 void st_Print(symbol_table *st);
+void st_Delete(symbol_table **st);
 
 #endif //HELPERS_H

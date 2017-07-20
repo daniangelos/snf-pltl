@@ -14,3 +14,5 @@ clean_all:
 example: $(TARGET) ex
 	./pltl <ex
 
+valgrind: $(TARGET) ex
+	valgrind --leak-check=yes ./pltl <ex 2>valgrind.out

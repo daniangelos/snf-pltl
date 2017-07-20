@@ -35,15 +35,17 @@ int main(int argc, char** argv) {
     printf("Formulae after sorting:\n");
     list_Print(formula_list);
     printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
-    simplification(formula_list);
+    /*simplification(formula_list);*/
     snf();
 
-    /*[>Printing read formulae and symbol table<]*/
     printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
     printf("Formulae after simplification:\n");
     list_Print(formula_list);
     printf("Symbol table: ");
     st_Print(st);
+
+    list_Delete(&formula_list);
+    st_Delete(&st);
 
     return 0;
 }
