@@ -87,6 +87,7 @@ void list_UnifyHead(list **l, tree* head, int op){
     tree_Delete(&head);
 }
 
+int i = 0;
 void list_UnifyChildren(list **l, int op){
     if(*l == NULL) return;
     tree *head = (*l)->element;
@@ -100,6 +101,7 @@ void list_UnifyChildren(list **l, int op){
     }
     if(head->op == op) {
         list_UnifyHead(l, head, op);
+        list_UnifyChildren(l, op);
 
         // MERGE LISTS
         list *last;
@@ -151,30 +153,43 @@ void FrontBackSplit(list* source,
   }
 }
 
+/* ## Formula Comparation ##
+ * Return >0 if  a < b
+ * Return 0 if  a = b
+ * Return <0 if a > b  */
 int formula_Compare(tree* a, tree* b){
+    if(a == NULL){
+        if(b == NULL) return 0;
+        else return 1;
+    }else if(b == NULL) return -1;
+
     if(a->op < b->op) return 1;
-    if(a->op > b->op) return 0;
+    if(a->op > b->op) return -1;
 
     tree *fsta = (tree*) list_Element(a->children);
     tree *fstb = (tree*) list_Element(b->children);
     tree *snda = NULL;
     tree *sndb = NULL;
-int op = a->op;
+
+    int op = a->op;
+    int cmp;
     switch(op){
         case FALSE:
         case TRUE:
-            return 1;
+            return 0;
         case NAME:
-            return (strcmp(a->id, b->id) <= 0);
+            return -(strcmp(a->id, b->id));
         case AND:
         case AND_TEXT:
         case OR:
         case OR_TEXT:
-            return 1;
+            return 0;
         case EQUIVALENCE:
             snda = (tree*) list_Tail(a->children)->element;
             sndb = (tree*) list_Tail(b->children)->element;
-            return formula_Compare(fsta, fstb) && formula_Compare(snda, sndb);
+            cmp = formula_Compare(fsta, fstb);
+            if(cmp == 0) return formula_Compare(snda, sndb);
+            else return cmp;
         case IMPLICATION:
         case NEXT:
         case ALWAYS:
@@ -197,7 +212,7 @@ list* SortedMerge(list* a, list* b)
      return(a);
  
   /* Pick either a or b, and recur */
-  if (formula_Compare((tree*)a->element, (tree*)b->element))
+  if (formula_Compare((tree*)a->element, (tree*)b->element) >= 0)
   {
      result = a;
      result->next = SortedMerge(a->next, b);
@@ -240,12 +255,13 @@ void list_Sort(list **l){
     list *children = NULL;
     if(element != NULL){
         children = element->children;
-        if(element->op == AND || element->op == OR){
-            list_UnifyChildren(&children, element->op);
+        int op = element->op;
+        if(op == AND || op == OR){
+            list_UnifyChildren(&children, op);
             mergesort(&children);
             ((tree*)(*l)->element)->children = children;
         }
-        if(element->op == EQUIVALENCE){
+        if(op == EQUIVALENCE){
             mergesort(&children);
             ((tree*)(*l)->element)->children = children;
         }
@@ -344,6 +360,15 @@ void op_Print(int op){
         case OR:
             printf("or");
             break;
+        case AND_TEXT:
+            printf("and");
+            break;
+        case OR_TEXT:
+            printf("or");
+            break;
+        case NOT:
+            printf("not");
+            break;
         case ALWAYS:
             printf("always");
             break;
@@ -366,7 +391,7 @@ void op_Print(int op){
             printf("equivalence");
             break;
         default:
-            printf("Operator could not be identified\n");
+            printf("Operator %d could not be identified\n", op);
             abort();
     }
 }
@@ -385,7 +410,7 @@ void tree_Print(tree *t)
 	}
 
 	if(!list_IsEmpty(tree_Children(t))) {
-		printf(" length: %d (", tree_Children(t)->length);
+		printf("(");
 		for(list *it = tree_Children(t); !list_IsEmpty(it); it = list_Tail(it)) {
 			tree_Print((tree*)list_Element(it));
 			if(!list_IsEmpty(list_Tail(it))) {

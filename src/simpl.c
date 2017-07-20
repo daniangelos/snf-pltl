@@ -25,7 +25,9 @@ void simplStep(tree *formula){
     /* Empty formula, nothing to be done */
     if(formula == NULL) return;
 
-    list *children;
+    list *children = NULL;
+    tree *child1, *child2;
+    child1 = child2 = NULL;
     int op = formula->op;
     switch(op){
         case TRUE:
@@ -35,28 +37,36 @@ void simplStep(tree *formula){
             printf("False\n");
             falseParenting(formula);
             break;
-        case NAME: /* Nothing to do, simply */ break;
+        case NAME: /* Nothing to do, simply */ 
+            break;
         case AND:
         case OR:
+            simplification(formula->children);
+            break;
         case ALWAYS:
         case NEXT:
         case SOMETIME:
         case UNLESS:
         case UNTIL:
+        case NOT:
             simplification(formula->children);
             break;
         case IMPLICATION:
         case EQUIVALENCE:
             children = formula->children;
-            if(checkEquality(children, list_Tail(children))){
+            child1 = (tree*) list_Element(children);
+            child2 = (tree*) list_Element(list_Tail(children));
+            if(formula_Compare(child1, child2) == 0){
                 /* BOTH SIDES EQUAL -> SIMPLIFY TO TRUE */
                 formula->op = TRUE;
+                formula->children = NULL;
                 list_Delete(&children);
             }
             else simplification(children);
+            mergesort(&children);
             break;
         default:
-            printf("Operator could not be identified\n");
+            printf("Operator %d could not be identified\n", op);
             abort();
     }
 }
@@ -70,6 +80,7 @@ void truthParenting(tree *formula){
     switch(op){
         /*Eliminate the True node from the tree*/
         case AND: /* 46 */
+            break;
         case EQUIVALENCE: 
             /*Check if it's the second child*/
             child = firstborn(p);
@@ -107,10 +118,11 @@ NONATOMIC:      /*Here*/ tmp = (tree*) list_Tail(p->children)->element;
             else if(child < 0) break;
         /* For the following cases, just replace the parenting 
          * node by True */
+        case OR:
+            break;
         case ALWAYS:
         case NEXT:
         case SOMETIME:
-        case OR:
         case UNLESS:
 ATOMIC:     p->op = formula->op;
             free(p->id);
@@ -129,7 +141,7 @@ ATOMIC:     p->op = formula->op;
             else if(child < 0) break;
             goto ATOMIC;
         default:
-            printf("Operator could not be identified\n");
+            printf("Operator %d could not be identified\n", op);
             abort();
     }
 }
