@@ -9,13 +9,12 @@ extern struct symbol_table *st;
 int atomicOcc = 1;
 
 void simplification(list *formulae){
-    /* Empty list of formulae, nothing to be done */
+    /* Nothing to be done */
     if(formulae == NULL) return;
 
     /* For each formula in the list, apply the simplifications steps
      * in all its subformulas */
-    list *it;
-    for (it = formulae; it != NULL; it = it->next){
+    for (list *it = formulae; it != NULL; it = it->next){
         simplStep((tree*) it->element); 
     }
     return;

@@ -102,6 +102,7 @@ formula:
         tree *t = tree_TreeId($1);
         tree_SetOp(NAME, t);
         st_InsertEntry($1, &st);
+        free($1);
         $$ = t;
     };
 

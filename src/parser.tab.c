@@ -465,8 +465,8 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint8 yyrline[] =
 {
        0,    62,    62,    65,    72,    76,    80,    84,    88,    92,
-      96,   100,   110,   114,   120,   126,   133,   139,   145,   151,
-     159,   163,   167,   173,   179,   185
+      96,   100,   111,   115,   121,   127,   134,   140,   146,   152,
+     160,   164,   168,   174,   180,   186
 };
 #endif
 
@@ -1355,145 +1355,146 @@ yyreduce:
         tree *t = tree_TreeId((yyvsp[0].cstring));
         tree_SetOp(NAME, t);
         st_InsertEntry((yyvsp[0].cstring), &st);
+        free((yyvsp[0].cstring));
         (yyval.ctree) = t;
     }
-#line 1361 "parser.tab.c" /* yacc.c:1646  */
+#line 1362 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 111 "parser.y" /* yacc.c:1646  */
+#line 112 "parser.y" /* yacc.c:1646  */
     {
 			(yyval.clist) = list_PushBack(list_List((yyvsp[-2].ctree)), (yyvsp[0].ctree));
 		}
-#line 1369 "parser.tab.c" /* yacc.c:1646  */
+#line 1370 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 115 "parser.y" /* yacc.c:1646  */
+#line 116 "parser.y" /* yacc.c:1646  */
     {
 			(yyval.clist) = list_PushBack((yyvsp[-2].clist), (yyvsp[0].ctree));
 		}
-#line 1377 "parser.tab.c" /* yacc.c:1646  */
+#line 1378 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 121 "parser.y" /* yacc.c:1646  */
+#line 122 "parser.y" /* yacc.c:1646  */
     {
 			tree *t = tree_TreeOp(AND);
 			tree_SetChildren(t, list_PushBack(list_List((yyvsp[-2].ctree)), (yyvsp[0].ctree)));
 			(yyval.ctree) = t;
 		}
-#line 1387 "parser.tab.c" /* yacc.c:1646  */
+#line 1388 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 127 "parser.y" /* yacc.c:1646  */
+#line 128 "parser.y" /* yacc.c:1646  */
     {
 			tree *t = tree_TreeOp(OR);
 			tree_SetChildren(t, list_PushBack(list_List((yyvsp[-2].ctree)), (yyvsp[0].ctree)));
 			(yyval.ctree) = t;
 		}
-#line 1397 "parser.tab.c" /* yacc.c:1646  */
+#line 1398 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 134 "parser.y" /* yacc.c:1646  */
+#line 135 "parser.y" /* yacc.c:1646  */
     {
 			tree *t = tree_TreeOp(UNTIL);
 			tree_SetChildren(t, list_PushBack(list_List((yyvsp[-2].ctree)), (yyvsp[0].ctree)));
 			(yyval.ctree) = t;
 		}
-#line 1407 "parser.tab.c" /* yacc.c:1646  */
+#line 1408 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 140 "parser.y" /* yacc.c:1646  */
+#line 141 "parser.y" /* yacc.c:1646  */
     {
 			tree *t = tree_TreeOp(UNLESS);
 			tree_SetChildren(t, list_PushBack(list_List((yyvsp[-2].ctree)), (yyvsp[0].ctree)));
 			(yyval.ctree) = t;
 		}
-#line 1417 "parser.tab.c" /* yacc.c:1646  */
+#line 1418 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 146 "parser.y" /* yacc.c:1646  */
+#line 147 "parser.y" /* yacc.c:1646  */
     {
 			tree *t = tree_TreeOp(IMPLICATION);
 			tree_SetChildren(t, list_PushBack(list_List((yyvsp[-2].ctree)), (yyvsp[0].ctree)));
 			(yyval.ctree) = t;
 		}
-#line 1427 "parser.tab.c" /* yacc.c:1646  */
+#line 1428 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 152 "parser.y" /* yacc.c:1646  */
+#line 153 "parser.y" /* yacc.c:1646  */
     {
 			tree *t = tree_TreeOp(EQUIVALENCE);
 			tree_SetChildren(t, list_PushBack(list_List((yyvsp[-2].ctree)), (yyvsp[0].ctree)));
 			(yyval.ctree) = t;
 		}
-#line 1437 "parser.tab.c" /* yacc.c:1646  */
+#line 1438 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 160 "parser.y" /* yacc.c:1646  */
+#line 161 "parser.y" /* yacc.c:1646  */
     {
 			(yyval.ctree) = tree_TreeOp(TRUE);
 		}
-#line 1445 "parser.tab.c" /* yacc.c:1646  */
+#line 1446 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 164 "parser.y" /* yacc.c:1646  */
+#line 165 "parser.y" /* yacc.c:1646  */
     {
 			(yyval.ctree) = tree_TreeOp(FALSE);
 		}
-#line 1453 "parser.tab.c" /* yacc.c:1646  */
+#line 1454 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 168 "parser.y" /* yacc.c:1646  */
+#line 169 "parser.y" /* yacc.c:1646  */
     {
 			tree *t = tree_TreeOp(NOT);
 			tree_SetChildren(t, list_List((yyvsp[0].ctree)));
 			(yyval.ctree) = t;
 		}
-#line 1463 "parser.tab.c" /* yacc.c:1646  */
+#line 1464 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 174 "parser.y" /* yacc.c:1646  */
+#line 175 "parser.y" /* yacc.c:1646  */
     {
 			tree *t = tree_TreeOp(ALWAYS);
 			tree_SetChildren(t, list_List((yyvsp[0].ctree)));
 			(yyval.ctree) = t;
 		}
-#line 1473 "parser.tab.c" /* yacc.c:1646  */
+#line 1474 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 180 "parser.y" /* yacc.c:1646  */
+#line 181 "parser.y" /* yacc.c:1646  */
     {
 			tree *t = tree_TreeOp(NEXT);
 			tree_SetChildren(t, list_List((yyvsp[0].ctree)));
 			(yyval.ctree) = t;
 		}
-#line 1483 "parser.tab.c" /* yacc.c:1646  */
+#line 1484 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 186 "parser.y" /* yacc.c:1646  */
+#line 187 "parser.y" /* yacc.c:1646  */
     {
 			tree *t = tree_TreeOp(SOMETIME);
 			tree_SetChildren(t, list_List((yyvsp[0].ctree)));
 			(yyval.ctree) = t;
 		}
-#line 1493 "parser.tab.c" /* yacc.c:1646  */
+#line 1494 "parser.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1497 "parser.tab.c" /* yacc.c:1646  */
+#line 1498 "parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1721,7 +1722,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 191 "parser.y" /* yacc.c:1906  */
+#line 192 "parser.y" /* yacc.c:1906  */
 
 
 tree* buildTreeFromAtLeastTwoList(int op, list *l)
