@@ -35,7 +35,13 @@ int main(int argc, char** argv) {
     printf("Formulae after sorting:\n");
     list_Print(formula_list);
     printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
-    simplification(formula_list);
+    initializeRules();
+
+    do{
+        simplified = 0;
+        simplification(formula_list);
+    } while(simplified && !list_IsEmpty(formula_list));
+
     snf();
 
     printf("~~~~~~~~~~~~~~~~~~~~~~~\n");

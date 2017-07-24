@@ -213,6 +213,8 @@ int formula_Compare(tree* a, tree* b){
 
     tree *snda = NULL;
     tree *sndb = NULL;
+    list *a_child = NULL;
+    list *b_child = NULL;
 
     int op = a_op;
     int cmp;
@@ -226,7 +228,23 @@ int formula_Compare(tree* a, tree* b){
         case AND_TEXT:
         case OR:
         case OR_TEXT:
-            return 0;
+            a_child = a->children;
+            b_child = b->children;
+            do{
+                cmp = formula_Compare(fsta, fstb);
+                if(cmp) break;
+                a_child = a_child->next;
+                b_child = b_child->next;
+                if(a_child == NULL){
+                    if(b_child != NULL) cmp = 1;
+                }
+                else if(b_child == NULL) cmp = -1;
+                else{
+                    fsta = (tree*) list_Element(a_child);
+                    fstb = (tree*) list_Element(b_child);
+                }
+            }while(a_child != NULL && b_child != NULL);
+            return cmp;
         case EQUIVALENCE:
             snda = (tree*) list_Tail(a->children)->element;
             sndb = (tree*) list_Tail(b->children)->element;

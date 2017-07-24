@@ -14,7 +14,7 @@ BEGIN	lex.yy.c	113;"	d	file:
 BISON	Makefile	/^BISON=bison$/;"	m
 BISONFLAGS	Makefile	/^BISONFLAGS=-v -d$/;"	m
 CC	Makefile	/^CC=gcc$/;"	m
-CFLAGS	Makefile	/^CFLAGS=-Wall -g -O0$/;"	m
+CFLAGS	Makefile	/^CFLAGS=-O3 -Wall$/;"	m
 CINITIAL	clauses.h	4;"	d
 CLAUSES_H	clauses.h	2;"	d
 CLITERAL	clauses.h	5;"	d
@@ -134,7 +134,7 @@ LEFT_BRACKET	parser.tab.c	/^    LEFT_BRACKET = 273,$/;"	e	enum:yytokentype	file:
 LEFT_BRACKET	parser.tab.h	/^    LEFT_BRACKET = 273,$/;"	e	enum:yytokentype
 LEFT_SQUARE_BRACKET	parser.tab.c	/^    LEFT_SQUARE_BRACKET = 276,$/;"	e	enum:yytokentype	file:
 LEFT_SQUARE_BRACKET	parser.tab.h	/^    LEFT_SQUARE_BRACKET = 276,$/;"	e	enum:yytokentype
-LFLAGS	Makefile	/^LFLAGS=-Wall -g -O0$/;"	m
+LFLAGS	Makefile	/^LFLAGS=-O3$/;"	m
 MUR_FMIX	uthash.h	666;"	d
 MUR_GETBLOCK	uthash.h	644;"	d
 MUR_GETBLOCK	uthash.h	660;"	d
@@ -164,7 +164,7 @@ OR_TEXT	parser.tab.c	/^    OR_TEXT = 265,$/;"	e	enum:yytokentype	file:
 OR_TEXT	parser.tab.h	/^    OR_TEXT = 265,$/;"	e	enum:yytokentype
 PARSERC	Makefile	/^PARSERC = lex.yy.c parser.tab.c$/;"	m
 PARSEROBJS	Makefile	/^PARSEROBJS = lex.yy.o parser.tab.o$/;"	m
-PFLAGS	Makefile	/^PFLAGS=-g -O0$/;"	m
+PFLAGS	Makefile	/^PFLAGS=-O3$/;"	m
 REJECT	lex.yy.c	499;"	d	file:
 RENAMING_H	renaming.h	2;"	d
 RIGHT_BRACKET	parser.tab.c	/^    RIGHT_BRACKET = 274,$/;"	e	enum:yytokentype	file:
@@ -342,7 +342,7 @@ _Noreturn	parser.tab.c	246;"	d	file:
 _Noreturn	parser.tab.c	248;"	d	file:
 __STDC_LIMIT_MACROS	lex.yy.c	39;"	d	file:
 alloca	parser.tab.c	293;"	d	file:
-atomicOcc	simpl.c	/^int atomicOcc = 1;$/;"	v
+atomicOcc	simpl.c	/^int atomicOcc = 0;$/;"	v
 binary_formula	parser.y	/^binary_formula:$/;"	l
 bloom_bv	uthash.h	/^   uint8_t *bloom_bv;$/;"	m	struct:UT_hash_table
 bloom_nbits	uthash.h	/^   uint8_t bloom_nbits;$/;"	m	struct:UT_hash_table
@@ -362,8 +362,8 @@ ctree	parser.tab.c	/^ struct tree* ctree;$/;"	m	union:YYSTYPE	typeref:struct:YYS
 ctree	parser.tab.h	/^ struct tree* ctree;$/;"	m	union:YYSTYPE	typeref:struct:YYSTYPE::tree
 element	helpers.h	/^	void *element;$/;"	m	struct:list
 expand_mult	uthash.h	/^   unsigned expand_mult;$/;"	m	struct:UT_hash_bucket
-falseParenting	simpl.c	/^void falseParenting(tree *formula){$/;"	f
-firstborn	simpl.c	/^int firstborn(tree *formula){$/;"	f
+falseParenting	simpl.c	/^void falseParenting(tree **formula, list **prev,  list **pos){$/;"	f
+findRepeated	simpl.c	/^void findRepeated(int op, list *children){$/;"	f
 flex_int16_t	lex.yy.c	/^typedef int16_t flex_int16_t;$/;"	t	file:
 flex_int16_t	lex.yy.c	/^typedef short int flex_int16_t;$/;"	t	file:
 flex_int32_t	lex.yy.c	/^typedef int flex_int32_t;$/;"	t	file:
@@ -399,10 +399,11 @@ ineff_expands	uthash.h	/^   unsigned ineff_expands, noexpand;$/;"	m	struct:UT_ha
 key	uthash.h	/^   void *key;                        \/* ptr to enclosing struct's key  *\/$/;"	m	struct:UT_hash_handle
 keylen	uthash.h	/^   unsigned keylen;                  \/* enclosing struct's key len     *\/$/;"	m	struct:UT_hash_handle
 left	clauses.h	/^    struct literalshash *left;$/;"	m	struct:clause	typeref:struct:clause::literalshash
-length	helpers.h	/^    int length;$/;"	m	struct:list
 list	helpers.h	/^struct list {$/;"	s
 list	helpers.h	/^typedef struct list list;$/;"	t	typeref:struct:list
 list_Delete	helpers.c	/^void list_Delete(list **l) {$/;"	f
+list_DeleteElem	helpers.c	/^void list_DeleteElem(list **prev, list **pos){$/;"	f
+list_DeletePos	helpers.c	/^void list_DeletePos(list **pos){$/;"	f
 list_Element	helpers.c	/^void* list_Element(list *l) {$/;"	f
 list_FirstElement	helpers.c	/^void* list_FirstElement(list *l) {$/;"	f
 list_IsEmpty	helpers.c	/^int list_IsEmpty(list *l) {$/;"	f
@@ -413,8 +414,8 @@ list_PushBack	helpers.c	/^list* list_PushBack(list *l, void *element) {$/;"	f
 list_Sort	helpers.c	/^void list_Sort(list **l){$/;"	f
 list_Tail	helpers.c	/^list* list_Tail(list *l) {$/;"	f
 list_UnifyChildren	helpers.c	/^void list_UnifyChildren(list **l, int op){$/;"	f
-list_UnifyHead	helpers.c	/^void list_UnifyHead(list **l, tree* head, int op){$/;"	f
-list_UnifyTail	helpers.c	/^void list_UnifyTail(list **l, list **tail, tree *element, int op){$/;"	f
+list_UnifyHead	helpers.c	/^void list_UnifyHead(list **l, tree* head, int op, tree* parent){$/;"	f
+list_UnifyTail	helpers.c	/^void list_UnifyTail(list **l, list **tail, tree *element, int op, tree* parent){$/;"	f
 literal	clauses.h	/^    int literal;$/;"	m	struct:literalshash
 literalshash	clauses.h	/^struct literalshash{$/;"	s
 literalshash	clauses.h	/^typedef struct literalshash literalshash;$/;"	t	typeref:struct:literalshash
@@ -437,7 +438,7 @@ prev	uthash.h	/^   void *prev;                       \/* prev element in app ord
 right	clauses.h	/^    struct literalshash *right;$/;"	m	struct:clause	typeref:struct:clause::literalshash
 short	parser.tab.c	171;"	d	file:
 signature	uthash.h	/^   uint32_t signature; \/* used only to find hash tables in external analysis *\/$/;"	m	struct:UT_hash_table
-simplStep	simpl.c	/^void simplStep(tree *formula){$/;"	f
+simplStep	simpl.c	/^void simplStep(tree **formula, list **prev, list **pos){$/;"	f
 simplification	simpl.c	/^void simplification(list *formulae){$/;"	f
 size	clauses.h	/^    int size;$/;"	m	struct:clause
 snf	snf.c	/^void snf(){$/;"	f
@@ -465,7 +466,7 @@ tree_SetOp	helpers.c	/^void tree_SetOp(int op, tree *t){$/;"	f
 tree_SetParent	helpers.c	/^void tree_SetParent(tree *t, tree *parent) {$/;"	f
 tree_TreeId	helpers.c	/^tree* tree_TreeId(char *id){$/;"	f
 tree_TreeOp	helpers.c	/^tree* tree_TreeOp(int op) {$/;"	f
-truthParenting	simpl.c	/^void truthParenting(tree *formula){$/;"	f
+truthParenting	simpl.c	/^void truthParenting(tree **formula, list **prev, list **pos){$/;"	f
 type	clauses.h	/^    int type; \/\/ initial, literal, step or sometime$/;"	m	struct:clause
 uint32_t	uthash.h	/^typedef unsigned int uint32_t;$/;"	t
 uint8_t	uthash.h	/^typedef unsigned char uint8_t;$/;"	t

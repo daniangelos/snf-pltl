@@ -6,23 +6,26 @@
 extern struct list *formula_list;
 extern struct symbol_table *st;
 
-int atomicOcc = 1;
+
+void initializeRules(){
+    for(int i = 0; i<45; i++) simplrules[i] = 0;
+}
 
 void simplification(list *formulae){
     /* Nothing to be done */
     if(formulae == NULL) return;
 
-    list *it = formulae;
-    list *prev = NULL;
 
     /* For each formula in the list, apply the simplifications steps
-     * in all its subformulas */
-    while(!list_IsEmpty(it)){
-        tree *element = (tree*) list_Element(it);
-        simplStep(&element, &prev, &it);
-        prev = it;
-        it = list_Tail(it);
-    }
+     * in all its subformulas as long as it's still simplification to do*/
+        list *it = formulae;
+        list *prev = NULL;
+        while(!list_IsEmpty(it)){
+            tree *element = (tree*) list_Element(it);
+            simplStep(&element, &prev, &it);
+            prev = it;
+            it = list_Tail(it);
+        }
     return;
 }
 
@@ -33,11 +36,11 @@ void simplStep(tree **formula, list **prev, list **pos){
     int op = (*formula)->op;
     switch(op){
         case TRUE:
-            printf("True\n");
+            simplified = 1;
             truthParenting(formula, prev, pos);
             break;
         case FALSE:
-            printf("False\n");
+            simplified = 1;
             falseParenting(formula, prev, pos);
             /*if(formula == NULL) printf(":)\n");*/
             break;
@@ -45,6 +48,7 @@ void simplStep(tree **formula, list **prev, list **pos){
             break;
         case AND:
         case OR:
+            checkUnarity(*formula);
         case UNLESS:
         case UNTIL:
         case IMPLICATION:
@@ -71,18 +75,28 @@ void truthParenting(tree **formula, list **prev, list **pos){
     int op = (*formula)->op;
     switch(p_op){
         case AND:
-            /* REMOVE TRUE NODE FROM TREE */
+            /* Remove true node from tree */
             elem = *formula;
             while(elem->op == op && !list_IsEmpty(*pos)){
                 list_DeleteElem(prev, pos);
                 if(*pos != NULL) elem = (tree*) list_Element(*pos);
             }
             if(*pos == NULL) {
-                // Remove empty node from tree
+                /* Empty conjunction into true */
+                p->op = TRUE;
+                p->children = NULL;
+                *pos = *prev = NULL;
+                break;
             } 
             else if(*prev == NULL) {
                 if((*pos)->next == NULL){
-                    // Remove unary conjunction
+                    /* Remove unary conjunction */
+                    p->op = elem->op;
+                    if (tree_Id(elem)) p->id = strdup(elem->id);
+                    p->children = elem->children;
+                    elem->children = NULL;
+                    list_Delete(pos);
+                    *pos = *prev = NULL;
                 }
                 else p->children = *pos;
             }
@@ -94,7 +108,7 @@ void truthParenting(tree **formula, list **prev, list **pos){
         case NEXT:
         case SOMETIME:
         case OR:
-            /* REPLACE PARENT BY TRUE */
+            /* Replace parent by true */
             p->op = op;
             list_Delete(&(p->children));
             *pos = *prev = NULL;
@@ -111,13 +125,31 @@ void falseParenting(tree **formula, list **prev,  list **pos){
     int op = (*formula)->op;
     switch(p_op){
         case OR:
-            /* REMOVE FALSE NODE FROM TREE */
+            /* Remove false node from tree */
             elem = *formula;
             while(elem->op == op && !list_IsEmpty(*pos)){
                 list_DeleteElem(prev, pos);
                 if(*pos != NULL) elem = (tree*) list_Element(*pos);
             }
-            if(*prev == NULL) p->children = *pos;
+            if(*pos == NULL) {
+                /* Empty disjunction into false */
+                p->op = FALSE;
+                p->children = NULL;
+                *pos = *prev = NULL;
+                break;
+            } 
+            else if(*prev == NULL) {
+                if((*pos)->next == NULL){
+                    /* Remove unary conjunction */
+                    p->op = elem->op;
+                    if (tree_Id(elem)) p->id = strdup(elem->id);
+                    p->children = elem->children;
+                    elem->children = NULL;
+                    tree_Delete(&elem);
+                    *pos = *prev = NULL;
+                }
+                else p->children = *pos;
+            }
             else p->children = *prev;
             break;
         case NOT:
@@ -126,7 +158,7 @@ void falseParenting(tree **formula, list **prev,  list **pos){
         case NEXT:
         case SOMETIME:
         case AND:
-            /* REPLACE PARENT BY FALSE */
+            /* Replace parent by false */
             p->op = op;
             list_Delete(&(p->children));
             *pos = *prev = NULL;
@@ -196,6 +228,7 @@ void findRepeated(int op, list *children){
         }
 
         if(formula_Compare(curr, next) == 0){
+            simplified = 1;
             /* Check the operator to decide what to do with the repeated node */
             switch(op){
                 case AND:
@@ -271,5 +304,21 @@ void findRepeated(int op, list *children){
             }
         }
         if(it == NULL || it->next == NULL) break;
+    }
+}
+
+void checkUnarity(tree *formula){
+    if(formula == NULL) return;
+    
+    list *it = formula->children;
+
+    if(it->next == NULL){
+        simplified = 1;
+        tree *elem = (tree*) list_Element(it);
+        formula->op = elem->op;
+        formula->children = elem->children;
+        elem->children = NULL;
+        if(tree_Id(elem)) {formula->id = elem->id; elem->id = NULL;}
+        list_Delete(&it);
     }
 }
