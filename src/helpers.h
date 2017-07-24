@@ -59,6 +59,7 @@ list* list_PushBack(list *l, void *element) ;
 void list_UnifyChildren(list **l, int op);
 list* list_List(void *element) ;
 void list_Delete(list **_l) ;
+void list_DeleteElem(list **prev, list **pos);
 int formula_Compare(tree* a, tree* b);
 void mergesort(list** headRef);
 void list_Sort(list **l);

@@ -18,7 +18,8 @@ int list_IsEmpty(list *l) {
 }
 
 list* list_Tail(list *l) {
-	return l->next;
+	if(l == NULL) return NULL;
+    return l->next;
 }
 
 void* list_Element(list *l) {
@@ -51,6 +52,13 @@ list* list_List(void *element) {
 	return list_PushBack(NULL, element);
 }
 
+void list_DeletePos(list **pos){
+    if(*pos == NULL) return;
+
+    tree *element = (tree*) (*pos)->element;
+    tree_Delete(&element);
+}
+
 void list_Delete(list **l) {
 	if(list_IsEmpty(*l)) return;
 
@@ -67,24 +75,48 @@ void list_Delete(list **l) {
 
     element = ((tree*) list_Element(*l));
     tree_Delete(&element);
-    (*l)->element = element;
+    (*l)->element = NULL;
     free(*l);
     *l = NULL;
 
 }
-void list_UnifyTail(list **l, list **tail, tree *element, int op){
+
+/* Delete element from in *pos preceded by *prev from the list */
+void list_DeleteElem(list **prev, list **pos){
+    if(*pos == NULL) return;
+    if(*prev == NULL){ 
+        (*prev) = (*pos)->next;
+        (*pos)->next = NULL;
+        list_Delete(pos);
+        (*pos) = (*prev);
+        (*prev) = NULL;
+    }
+    else{ 
+        printf("right?\n");
+        (*prev)->next = (*pos)->next;
+        (*pos)->next = NULL;
+        list_Delete(pos);
+        (*pos) = (*prev)->next;
+    }
+}
+
+void list_UnifyTail(list **l, list **tail, tree *element, int op, tree* parent){
     (*l)->next = element->children; 
     (*tail)->element = NULL;
     list_Delete(tail);
     *tail = (*l)->next;
+    for(list* it = *tail; !list_IsEmpty(it); it = list_Tail(it))
+        ((tree*) it->element)->parent = parent;
     element->children = NULL;
     tree_Delete(&element);
     list_UnifyChildren(tail, op);
     (*l)->next = *tail;
 }
 
-void list_UnifyHead(list **l, tree* head, int op){
+void list_UnifyHead(list **l, tree* head, int op, tree* parent){
     *l = head->children;
+    for(list* it = *l; !list_IsEmpty(it); it = list_Tail(it))
+        ((tree*) it->element)->parent = parent;
     head->children = NULL;
     tree_Delete(&head);
     list_UnifyChildren(l, op);
@@ -94,17 +126,18 @@ int i = 0;
 void list_UnifyChildren(list **l, int op){
     if(*l == NULL) return;
     tree *head = (*l)->element;
+    tree *parent = head->parent;
     list *tail = list_Tail(*l);
     tree *element = (tree*) tail->element;
 
     if(element->op == op){
-        list_UnifyTail(l, &tail, element, op);
+        list_UnifyTail(l, &tail, element, op, parent);
     }
     if(head->op == op) {
         (*l)->element = NULL;
         (*l)->next = NULL;
         list_Delete(l);
-        list_UnifyHead(l, head, op);
+        list_UnifyHead(l, head, op, parent);
 
         // MERGE LISTS
         list *last = NULL;
@@ -153,7 +186,7 @@ void FrontBackSplit(list* source,
   }
 }
 
-/* ## Formula Comparation ##
+/* ## Formulae Comparation ##
  * Return >0 if  a < b
  * Return 0 if  a = b
  * Return <0 if a > b  */
@@ -163,15 +196,25 @@ int formula_Compare(tree* a, tree* b){
         else return 1;
     }else if(b == NULL) return -1;
 
-    if(a->op < b->op) return 1;
-    if(a->op > b->op) return -1;
+    int a_op = a->op;
+    int b_op = b->op;
 
     tree *fsta = (tree*) list_Element(a->children);
     tree *fstb = (tree*) list_Element(b->children);
+
+    if(a_op == NOT){
+        if(b_op == NOT) return formula_Compare(fsta, fstb);
+        else return formula_Compare(fsta, b);
+    }
+    else if(b_op == NOT) return formula_Compare(a, fstb);
+
+    if(a_op < b_op) return 1;
+    if(a_op > b_op) return -1;
+
     tree *snda = NULL;
     tree *sndb = NULL;
 
-    int op = a->op;
+    int op = a_op;
     int cmp;
     switch(op){
         case FALSE:
@@ -196,7 +239,6 @@ int formula_Compare(tree* a, tree* b){
         case SOMETIME:
         case UNTIL:
         case UNLESS:
-        case NOT:
             return formula_Compare(fsta, fstb);
         default:
             return 0;
