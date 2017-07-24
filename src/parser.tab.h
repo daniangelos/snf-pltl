@@ -45,26 +45,26 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    NAME = 258,
-    AND = 259,
-    AND_TEXT = 260,
-    OR = 261,
-    OR_TEXT = 262,
-    NOT = 263,
-    ALWAYS = 264,
-    NEXT = 265,
-    SOMETIME = 266,
-    LEFT_BRACKET = 267,
-    RIGHT_BRACKET = 268,
-    COMMA = 269,
-    UNLESS = 270,
+    FALSE = 258,
+    TRUE = 259,
+    NAME = 260,
+    NOT = 261,
+    AND = 262,
+    AND_TEXT = 263,
+    OR = 264,
+    OR_TEXT = 265,
+    IMPLICATION = 266,
+    EQUIVALENCE = 267,
+    NEXT = 268,
+    ALWAYS = 269,
+    SOMETIME = 270,
     UNTIL = 271,
-    IMPLICATION = 272,
-    EQUIVALENCE = 273,
-    LEFT_SQUARE_BRACKET = 274,
-    RIGHT_SQUARE_BRACKET = 275,
-    FALSE = 276,
-    TRUE = 277
+    UNLESS = 272,
+    LEFT_BRACKET = 273,
+    RIGHT_BRACKET = 274,
+    COMMA = 275,
+    LEFT_SQUARE_BRACKET = 276,
+    RIGHT_SQUARE_BRACKET = 277
   };
 #endif
 

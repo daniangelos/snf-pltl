@@ -36,26 +36,26 @@ Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-NAME (258) 10
-AND (259) 13
-AND_TEXT (260) 6 8
-OR (261) 14
-OR_TEXT (262) 7 9
-NOT (263) 21
-ALWAYS (264) 22
-NEXT (265) 23
-SOMETIME (266) 24
-LEFT_BRACKET (267) 3 6 7 8 9
-RIGHT_BRACKET (268) 3 6 7 8 9
-COMMA (269) 11 12
-UNLESS (270) 16
+FALSE (258) 20
+TRUE (259) 19
+NAME (260) 10
+NOT (261) 21
+AND (262) 13
+AND_TEXT (263) 6 8
+OR (264) 14
+OR_TEXT (265) 7 9
+IMPLICATION (266) 17
+EQUIVALENCE (267) 18
+NEXT (268) 23
+ALWAYS (269) 22
+SOMETIME (270) 24
 UNTIL (271) 15
-IMPLICATION (272) 17
-EQUIVALENCE (273) 18
-LEFT_SQUARE_BRACKET (274) 6 7 8 9
-RIGHT_SQUARE_BRACKET (275) 6 7 8 9
-FALSE (276) 20
-TRUE (277) 19
+UNLESS (272) 16
+LEFT_BRACKET (273) 3 6 7 8 9
+RIGHT_BRACKET (274) 3 6 7 8 9
+COMMA (275) 11 12
+LEFT_SQUARE_BRACKET (276) 6 7 8 9
+RIGHT_SQUARE_BRACKET (277) 6 7 8 9
 
 
 Nonterminals, with rules where they appear
@@ -90,16 +90,16 @@ State 1
     2 formulae: formulae . formula
 
     $end          shift, and go to state 2
-    NAME          shift, and go to state 3
-    AND_TEXT      shift, and go to state 4
-    OR_TEXT       shift, and go to state 5
+    FALSE         shift, and go to state 3
+    TRUE          shift, and go to state 4
+    NAME          shift, and go to state 5
     NOT           shift, and go to state 6
-    ALWAYS        shift, and go to state 7
-    NEXT          shift, and go to state 8
-    SOMETIME      shift, and go to state 9
-    LEFT_BRACKET  shift, and go to state 10
-    FALSE         shift, and go to state 11
-    TRUE          shift, and go to state 12
+    AND_TEXT      shift, and go to state 7
+    OR_TEXT       shift, and go to state 8
+    NEXT          shift, and go to state 9
+    ALWAYS        shift, and go to state 10
+    SOMETIME      shift, and go to state 11
+    LEFT_BRACKET  shift, and go to state 12
 
     formula         go to state 13
     binary_formula  go to state 14
@@ -115,139 +115,139 @@ State 2
 
 State 3
 
-   10 formula: NAME .
+   20 unary_formula: FALSE .
 
-    $default  reduce using rule 10 (formula)
+    $default  reduce using rule 20 (unary_formula)
 
 
 State 4
 
-    6 formula: AND_TEXT . LEFT_BRACKET LEFT_SQUARE_BRACKET formula_list_at_least_two RIGHT_SQUARE_BRACKET RIGHT_BRACKET
-    8        | AND_TEXT . LEFT_BRACKET LEFT_SQUARE_BRACKET formula RIGHT_SQUARE_BRACKET RIGHT_BRACKET
+   19 unary_formula: TRUE .
 
-    LEFT_BRACKET  shift, and go to state 16
+    $default  reduce using rule 19 (unary_formula)
 
 
 State 5
 
-    7 formula: OR_TEXT . LEFT_BRACKET LEFT_SQUARE_BRACKET formula_list_at_least_two RIGHT_SQUARE_BRACKET RIGHT_BRACKET
-    9        | OR_TEXT . LEFT_BRACKET LEFT_SQUARE_BRACKET formula RIGHT_SQUARE_BRACKET RIGHT_BRACKET
+   10 formula: NAME .
 
-    LEFT_BRACKET  shift, and go to state 17
+    $default  reduce using rule 10 (formula)
 
 
 State 6
 
    21 unary_formula: NOT . formula
 
-    NAME          shift, and go to state 3
-    AND_TEXT      shift, and go to state 4
-    OR_TEXT       shift, and go to state 5
+    FALSE         shift, and go to state 3
+    TRUE          shift, and go to state 4
+    NAME          shift, and go to state 5
     NOT           shift, and go to state 6
-    ALWAYS        shift, and go to state 7
-    NEXT          shift, and go to state 8
-    SOMETIME      shift, and go to state 9
-    LEFT_BRACKET  shift, and go to state 10
-    FALSE         shift, and go to state 11
-    TRUE          shift, and go to state 12
+    AND_TEXT      shift, and go to state 7
+    OR_TEXT       shift, and go to state 8
+    NEXT          shift, and go to state 9
+    ALWAYS        shift, and go to state 10
+    SOMETIME      shift, and go to state 11
+    LEFT_BRACKET  shift, and go to state 12
 
-    formula         go to state 18
+    formula         go to state 16
     binary_formula  go to state 14
     unary_formula   go to state 15
 
 
 State 7
 
-   22 unary_formula: ALWAYS . formula
+    6 formula: AND_TEXT . LEFT_BRACKET LEFT_SQUARE_BRACKET formula_list_at_least_two RIGHT_SQUARE_BRACKET RIGHT_BRACKET
+    8        | AND_TEXT . LEFT_BRACKET LEFT_SQUARE_BRACKET formula RIGHT_SQUARE_BRACKET RIGHT_BRACKET
 
-    NAME          shift, and go to state 3
-    AND_TEXT      shift, and go to state 4
-    OR_TEXT       shift, and go to state 5
+    LEFT_BRACKET  shift, and go to state 17
+
+
+State 8
+
+    7 formula: OR_TEXT . LEFT_BRACKET LEFT_SQUARE_BRACKET formula_list_at_least_two RIGHT_SQUARE_BRACKET RIGHT_BRACKET
+    9        | OR_TEXT . LEFT_BRACKET LEFT_SQUARE_BRACKET formula RIGHT_SQUARE_BRACKET RIGHT_BRACKET
+
+    LEFT_BRACKET  shift, and go to state 18
+
+
+State 9
+
+   23 unary_formula: NEXT . formula
+
+    FALSE         shift, and go to state 3
+    TRUE          shift, and go to state 4
+    NAME          shift, and go to state 5
     NOT           shift, and go to state 6
-    ALWAYS        shift, and go to state 7
-    NEXT          shift, and go to state 8
-    SOMETIME      shift, and go to state 9
-    LEFT_BRACKET  shift, and go to state 10
-    FALSE         shift, and go to state 11
-    TRUE          shift, and go to state 12
+    AND_TEXT      shift, and go to state 7
+    OR_TEXT       shift, and go to state 8
+    NEXT          shift, and go to state 9
+    ALWAYS        shift, and go to state 10
+    SOMETIME      shift, and go to state 11
+    LEFT_BRACKET  shift, and go to state 12
 
     formula         go to state 19
     binary_formula  go to state 14
     unary_formula   go to state 15
 
 
-State 8
+State 10
 
-   23 unary_formula: NEXT . formula
+   22 unary_formula: ALWAYS . formula
 
-    NAME          shift, and go to state 3
-    AND_TEXT      shift, and go to state 4
-    OR_TEXT       shift, and go to state 5
+    FALSE         shift, and go to state 3
+    TRUE          shift, and go to state 4
+    NAME          shift, and go to state 5
     NOT           shift, and go to state 6
-    ALWAYS        shift, and go to state 7
-    NEXT          shift, and go to state 8
-    SOMETIME      shift, and go to state 9
-    LEFT_BRACKET  shift, and go to state 10
-    FALSE         shift, and go to state 11
-    TRUE          shift, and go to state 12
+    AND_TEXT      shift, and go to state 7
+    OR_TEXT       shift, and go to state 8
+    NEXT          shift, and go to state 9
+    ALWAYS        shift, and go to state 10
+    SOMETIME      shift, and go to state 11
+    LEFT_BRACKET  shift, and go to state 12
 
     formula         go to state 20
     binary_formula  go to state 14
     unary_formula   go to state 15
 
 
-State 9
+State 11
 
    24 unary_formula: SOMETIME . formula
 
-    NAME          shift, and go to state 3
-    AND_TEXT      shift, and go to state 4
-    OR_TEXT       shift, and go to state 5
+    FALSE         shift, and go to state 3
+    TRUE          shift, and go to state 4
+    NAME          shift, and go to state 5
     NOT           shift, and go to state 6
-    ALWAYS        shift, and go to state 7
-    NEXT          shift, and go to state 8
-    SOMETIME      shift, and go to state 9
-    LEFT_BRACKET  shift, and go to state 10
-    FALSE         shift, and go to state 11
-    TRUE          shift, and go to state 12
+    AND_TEXT      shift, and go to state 7
+    OR_TEXT       shift, and go to state 8
+    NEXT          shift, and go to state 9
+    ALWAYS        shift, and go to state 10
+    SOMETIME      shift, and go to state 11
+    LEFT_BRACKET  shift, and go to state 12
 
     formula         go to state 21
     binary_formula  go to state 14
     unary_formula   go to state 15
 
 
-State 10
+State 12
 
     3 formula: LEFT_BRACKET . formula RIGHT_BRACKET
 
-    NAME          shift, and go to state 3
-    AND_TEXT      shift, and go to state 4
-    OR_TEXT       shift, and go to state 5
+    FALSE         shift, and go to state 3
+    TRUE          shift, and go to state 4
+    NAME          shift, and go to state 5
     NOT           shift, and go to state 6
-    ALWAYS        shift, and go to state 7
-    NEXT          shift, and go to state 8
-    SOMETIME      shift, and go to state 9
-    LEFT_BRACKET  shift, and go to state 10
-    FALSE         shift, and go to state 11
-    TRUE          shift, and go to state 12
+    AND_TEXT      shift, and go to state 7
+    OR_TEXT       shift, and go to state 8
+    NEXT          shift, and go to state 9
+    ALWAYS        shift, and go to state 10
+    SOMETIME      shift, and go to state 11
+    LEFT_BRACKET  shift, and go to state 12
 
     formula         go to state 22
     binary_formula  go to state 14
     unary_formula   go to state 15
-
-
-State 11
-
-   20 unary_formula: FALSE .
-
-    $default  reduce using rule 20 (unary_formula)
-
-
-State 12
-
-   19 unary_formula: TRUE .
-
-    $default  reduce using rule 19 (unary_formula)
 
 
 State 13
@@ -262,10 +262,10 @@ State 13
 
     AND          shift, and go to state 23
     OR           shift, and go to state 24
-    UNLESS       shift, and go to state 25
-    UNTIL        shift, and go to state 26
-    IMPLICATION  shift, and go to state 27
-    EQUIVALENCE  shift, and go to state 28
+    IMPLICATION  shift, and go to state 25
+    EQUIVALENCE  shift, and go to state 26
+    UNTIL        shift, and go to state 27
+    UNLESS       shift, and go to state 28
 
     $default  reduce using rule 2 (formulae)
 
@@ -286,22 +286,6 @@ State 15
 
 State 16
 
-    6 formula: AND_TEXT LEFT_BRACKET . LEFT_SQUARE_BRACKET formula_list_at_least_two RIGHT_SQUARE_BRACKET RIGHT_BRACKET
-    8        | AND_TEXT LEFT_BRACKET . LEFT_SQUARE_BRACKET formula RIGHT_SQUARE_BRACKET RIGHT_BRACKET
-
-    LEFT_SQUARE_BRACKET  shift, and go to state 29
-
-
-State 17
-
-    7 formula: OR_TEXT LEFT_BRACKET . LEFT_SQUARE_BRACKET formula_list_at_least_two RIGHT_SQUARE_BRACKET RIGHT_BRACKET
-    9        | OR_TEXT LEFT_BRACKET . LEFT_SQUARE_BRACKET formula RIGHT_SQUARE_BRACKET RIGHT_BRACKET
-
-    LEFT_SQUARE_BRACKET  shift, and go to state 30
-
-
-State 18
-
    13 binary_formula: formula . AND formula
    14               | formula . OR formula
    15               | formula . UNTIL formula
@@ -313,20 +297,23 @@ State 18
     $default  reduce using rule 21 (unary_formula)
 
 
+State 17
+
+    6 formula: AND_TEXT LEFT_BRACKET . LEFT_SQUARE_BRACKET formula_list_at_least_two RIGHT_SQUARE_BRACKET RIGHT_BRACKET
+    8        | AND_TEXT LEFT_BRACKET . LEFT_SQUARE_BRACKET formula RIGHT_SQUARE_BRACKET RIGHT_BRACKET
+
+    LEFT_SQUARE_BRACKET  shift, and go to state 29
+
+
+State 18
+
+    7 formula: OR_TEXT LEFT_BRACKET . LEFT_SQUARE_BRACKET formula_list_at_least_two RIGHT_SQUARE_BRACKET RIGHT_BRACKET
+    9        | OR_TEXT LEFT_BRACKET . LEFT_SQUARE_BRACKET formula RIGHT_SQUARE_BRACKET RIGHT_BRACKET
+
+    LEFT_SQUARE_BRACKET  shift, and go to state 30
+
+
 State 19
-
-   13 binary_formula: formula . AND formula
-   14               | formula . OR formula
-   15               | formula . UNTIL formula
-   16               | formula . UNLESS formula
-   17               | formula . IMPLICATION formula
-   18               | formula . EQUIVALENCE formula
-   22 unary_formula: ALWAYS formula .
-
-    $default  reduce using rule 22 (unary_formula)
-
-
-State 20
 
    13 binary_formula: formula . AND formula
    14               | formula . OR formula
@@ -337,6 +324,19 @@ State 20
    23 unary_formula: NEXT formula .
 
     $default  reduce using rule 23 (unary_formula)
+
+
+State 20
+
+   13 binary_formula: formula . AND formula
+   14               | formula . OR formula
+   15               | formula . UNTIL formula
+   16               | formula . UNLESS formula
+   17               | formula . IMPLICATION formula
+   18               | formula . EQUIVALENCE formula
+   22 unary_formula: ALWAYS formula .
+
+    $default  reduce using rule 22 (unary_formula)
 
 
 State 21
@@ -364,27 +364,27 @@ State 22
 
     AND            shift, and go to state 23
     OR             shift, and go to state 24
+    IMPLICATION    shift, and go to state 25
+    EQUIVALENCE    shift, and go to state 26
+    UNTIL          shift, and go to state 27
+    UNLESS         shift, and go to state 28
     RIGHT_BRACKET  shift, and go to state 31
-    UNLESS         shift, and go to state 25
-    UNTIL          shift, and go to state 26
-    IMPLICATION    shift, and go to state 27
-    EQUIVALENCE    shift, and go to state 28
 
 
 State 23
 
    13 binary_formula: formula AND . formula
 
-    NAME          shift, and go to state 3
-    AND_TEXT      shift, and go to state 4
-    OR_TEXT       shift, and go to state 5
+    FALSE         shift, and go to state 3
+    TRUE          shift, and go to state 4
+    NAME          shift, and go to state 5
     NOT           shift, and go to state 6
-    ALWAYS        shift, and go to state 7
-    NEXT          shift, and go to state 8
-    SOMETIME      shift, and go to state 9
-    LEFT_BRACKET  shift, and go to state 10
-    FALSE         shift, and go to state 11
-    TRUE          shift, and go to state 12
+    AND_TEXT      shift, and go to state 7
+    OR_TEXT       shift, and go to state 8
+    NEXT          shift, and go to state 9
+    ALWAYS        shift, and go to state 10
+    SOMETIME      shift, and go to state 11
+    LEFT_BRACKET  shift, and go to state 12
 
     formula         go to state 32
     binary_formula  go to state 14
@@ -395,16 +395,16 @@ State 24
 
    14 binary_formula: formula OR . formula
 
-    NAME          shift, and go to state 3
-    AND_TEXT      shift, and go to state 4
-    OR_TEXT       shift, and go to state 5
+    FALSE         shift, and go to state 3
+    TRUE          shift, and go to state 4
+    NAME          shift, and go to state 5
     NOT           shift, and go to state 6
-    ALWAYS        shift, and go to state 7
-    NEXT          shift, and go to state 8
-    SOMETIME      shift, and go to state 9
-    LEFT_BRACKET  shift, and go to state 10
-    FALSE         shift, and go to state 11
-    TRUE          shift, and go to state 12
+    AND_TEXT      shift, and go to state 7
+    OR_TEXT       shift, and go to state 8
+    NEXT          shift, and go to state 9
+    ALWAYS        shift, and go to state 10
+    SOMETIME      shift, and go to state 11
+    LEFT_BRACKET  shift, and go to state 12
 
     formula         go to state 33
     binary_formula  go to state 14
@@ -413,18 +413,18 @@ State 24
 
 State 25
 
-   16 binary_formula: formula UNLESS . formula
+   17 binary_formula: formula IMPLICATION . formula
 
-    NAME          shift, and go to state 3
-    AND_TEXT      shift, and go to state 4
-    OR_TEXT       shift, and go to state 5
+    FALSE         shift, and go to state 3
+    TRUE          shift, and go to state 4
+    NAME          shift, and go to state 5
     NOT           shift, and go to state 6
-    ALWAYS        shift, and go to state 7
-    NEXT          shift, and go to state 8
-    SOMETIME      shift, and go to state 9
-    LEFT_BRACKET  shift, and go to state 10
-    FALSE         shift, and go to state 11
-    TRUE          shift, and go to state 12
+    AND_TEXT      shift, and go to state 7
+    OR_TEXT       shift, and go to state 8
+    NEXT          shift, and go to state 9
+    ALWAYS        shift, and go to state 10
+    SOMETIME      shift, and go to state 11
+    LEFT_BRACKET  shift, and go to state 12
 
     formula         go to state 34
     binary_formula  go to state 14
@@ -433,18 +433,18 @@ State 25
 
 State 26
 
-   15 binary_formula: formula UNTIL . formula
+   18 binary_formula: formula EQUIVALENCE . formula
 
-    NAME          shift, and go to state 3
-    AND_TEXT      shift, and go to state 4
-    OR_TEXT       shift, and go to state 5
+    FALSE         shift, and go to state 3
+    TRUE          shift, and go to state 4
+    NAME          shift, and go to state 5
     NOT           shift, and go to state 6
-    ALWAYS        shift, and go to state 7
-    NEXT          shift, and go to state 8
-    SOMETIME      shift, and go to state 9
-    LEFT_BRACKET  shift, and go to state 10
-    FALSE         shift, and go to state 11
-    TRUE          shift, and go to state 12
+    AND_TEXT      shift, and go to state 7
+    OR_TEXT       shift, and go to state 8
+    NEXT          shift, and go to state 9
+    ALWAYS        shift, and go to state 10
+    SOMETIME      shift, and go to state 11
+    LEFT_BRACKET  shift, and go to state 12
 
     formula         go to state 35
     binary_formula  go to state 14
@@ -453,18 +453,18 @@ State 26
 
 State 27
 
-   17 binary_formula: formula IMPLICATION . formula
+   15 binary_formula: formula UNTIL . formula
 
-    NAME          shift, and go to state 3
-    AND_TEXT      shift, and go to state 4
-    OR_TEXT       shift, and go to state 5
+    FALSE         shift, and go to state 3
+    TRUE          shift, and go to state 4
+    NAME          shift, and go to state 5
     NOT           shift, and go to state 6
-    ALWAYS        shift, and go to state 7
-    NEXT          shift, and go to state 8
-    SOMETIME      shift, and go to state 9
-    LEFT_BRACKET  shift, and go to state 10
-    FALSE         shift, and go to state 11
-    TRUE          shift, and go to state 12
+    AND_TEXT      shift, and go to state 7
+    OR_TEXT       shift, and go to state 8
+    NEXT          shift, and go to state 9
+    ALWAYS        shift, and go to state 10
+    SOMETIME      shift, and go to state 11
+    LEFT_BRACKET  shift, and go to state 12
 
     formula         go to state 36
     binary_formula  go to state 14
@@ -473,18 +473,18 @@ State 27
 
 State 28
 
-   18 binary_formula: formula EQUIVALENCE . formula
+   16 binary_formula: formula UNLESS . formula
 
-    NAME          shift, and go to state 3
-    AND_TEXT      shift, and go to state 4
-    OR_TEXT       shift, and go to state 5
+    FALSE         shift, and go to state 3
+    TRUE          shift, and go to state 4
+    NAME          shift, and go to state 5
     NOT           shift, and go to state 6
-    ALWAYS        shift, and go to state 7
-    NEXT          shift, and go to state 8
-    SOMETIME      shift, and go to state 9
-    LEFT_BRACKET  shift, and go to state 10
-    FALSE         shift, and go to state 11
-    TRUE          shift, and go to state 12
+    AND_TEXT      shift, and go to state 7
+    OR_TEXT       shift, and go to state 8
+    NEXT          shift, and go to state 9
+    ALWAYS        shift, and go to state 10
+    SOMETIME      shift, and go to state 11
+    LEFT_BRACKET  shift, and go to state 12
 
     formula         go to state 37
     binary_formula  go to state 14
@@ -496,16 +496,16 @@ State 29
     6 formula: AND_TEXT LEFT_BRACKET LEFT_SQUARE_BRACKET . formula_list_at_least_two RIGHT_SQUARE_BRACKET RIGHT_BRACKET
     8        | AND_TEXT LEFT_BRACKET LEFT_SQUARE_BRACKET . formula RIGHT_SQUARE_BRACKET RIGHT_BRACKET
 
-    NAME          shift, and go to state 3
-    AND_TEXT      shift, and go to state 4
-    OR_TEXT       shift, and go to state 5
+    FALSE         shift, and go to state 3
+    TRUE          shift, and go to state 4
+    NAME          shift, and go to state 5
     NOT           shift, and go to state 6
-    ALWAYS        shift, and go to state 7
-    NEXT          shift, and go to state 8
-    SOMETIME      shift, and go to state 9
-    LEFT_BRACKET  shift, and go to state 10
-    FALSE         shift, and go to state 11
-    TRUE          shift, and go to state 12
+    AND_TEXT      shift, and go to state 7
+    OR_TEXT       shift, and go to state 8
+    NEXT          shift, and go to state 9
+    ALWAYS        shift, and go to state 10
+    SOMETIME      shift, and go to state 11
+    LEFT_BRACKET  shift, and go to state 12
 
     formula                    go to state 38
     formula_list_at_least_two  go to state 39
@@ -518,16 +518,16 @@ State 30
     7 formula: OR_TEXT LEFT_BRACKET LEFT_SQUARE_BRACKET . formula_list_at_least_two RIGHT_SQUARE_BRACKET RIGHT_BRACKET
     9        | OR_TEXT LEFT_BRACKET LEFT_SQUARE_BRACKET . formula RIGHT_SQUARE_BRACKET RIGHT_BRACKET
 
-    NAME          shift, and go to state 3
-    AND_TEXT      shift, and go to state 4
-    OR_TEXT       shift, and go to state 5
+    FALSE         shift, and go to state 3
+    TRUE          shift, and go to state 4
+    NAME          shift, and go to state 5
     NOT           shift, and go to state 6
-    ALWAYS        shift, and go to state 7
-    NEXT          shift, and go to state 8
-    SOMETIME      shift, and go to state 9
-    LEFT_BRACKET  shift, and go to state 10
-    FALSE         shift, and go to state 11
-    TRUE          shift, and go to state 12
+    AND_TEXT      shift, and go to state 7
+    OR_TEXT       shift, and go to state 8
+    NEXT          shift, and go to state 9
+    ALWAYS        shift, and go to state 10
+    SOMETIME      shift, and go to state 11
+    LEFT_BRACKET  shift, and go to state 12
 
     formula                    go to state 40
     formula_list_at_least_two  go to state 41
@@ -580,61 +580,21 @@ State 34
    14               | formula . OR formula
    15               | formula . UNTIL formula
    16               | formula . UNLESS formula
-   16               | formula UNLESS formula .
-   17               | formula . IMPLICATION formula
-   18               | formula . EQUIVALENCE formula
-
-    AND          shift, and go to state 23
-    OR           shift, and go to state 24
-    UNLESS       shift, and go to state 25
-    UNTIL        shift, and go to state 26
-    IMPLICATION  shift, and go to state 27
-    EQUIVALENCE  shift, and go to state 28
-
-    $default  reduce using rule 16 (binary_formula)
-
-
-State 35
-
-   13 binary_formula: formula . AND formula
-   14               | formula . OR formula
-   15               | formula . UNTIL formula
-   15               | formula UNTIL formula .
-   16               | formula . UNLESS formula
-   17               | formula . IMPLICATION formula
-   18               | formula . EQUIVALENCE formula
-
-    AND          shift, and go to state 23
-    OR           shift, and go to state 24
-    UNLESS       shift, and go to state 25
-    UNTIL        shift, and go to state 26
-    IMPLICATION  shift, and go to state 27
-    EQUIVALENCE  shift, and go to state 28
-
-    $default  reduce using rule 15 (binary_formula)
-
-
-State 36
-
-   13 binary_formula: formula . AND formula
-   14               | formula . OR formula
-   15               | formula . UNTIL formula
-   16               | formula . UNLESS formula
    17               | formula . IMPLICATION formula
    17               | formula IMPLICATION formula .
    18               | formula . EQUIVALENCE formula
 
     AND          shift, and go to state 23
     OR           shift, and go to state 24
-    UNLESS       shift, and go to state 25
-    UNTIL        shift, and go to state 26
-    IMPLICATION  shift, and go to state 27
-    EQUIVALENCE  shift, and go to state 28
+    IMPLICATION  shift, and go to state 25
+    EQUIVALENCE  shift, and go to state 26
+    UNTIL        shift, and go to state 27
+    UNLESS       shift, and go to state 28
 
     $default  reduce using rule 17 (binary_formula)
 
 
-State 37
+State 35
 
    13 binary_formula: formula . AND formula
    14               | formula . OR formula
@@ -646,12 +606,52 @@ State 37
 
     AND          shift, and go to state 23
     OR           shift, and go to state 24
-    UNLESS       shift, and go to state 25
-    UNTIL        shift, and go to state 26
-    IMPLICATION  shift, and go to state 27
-    EQUIVALENCE  shift, and go to state 28
+    IMPLICATION  shift, and go to state 25
+    EQUIVALENCE  shift, and go to state 26
+    UNTIL        shift, and go to state 27
+    UNLESS       shift, and go to state 28
 
     $default  reduce using rule 18 (binary_formula)
+
+
+State 36
+
+   13 binary_formula: formula . AND formula
+   14               | formula . OR formula
+   15               | formula . UNTIL formula
+   15               | formula UNTIL formula .
+   16               | formula . UNLESS formula
+   17               | formula . IMPLICATION formula
+   18               | formula . EQUIVALENCE formula
+
+    AND          shift, and go to state 23
+    OR           shift, and go to state 24
+    IMPLICATION  shift, and go to state 25
+    EQUIVALENCE  shift, and go to state 26
+    UNTIL        shift, and go to state 27
+    UNLESS       shift, and go to state 28
+
+    $default  reduce using rule 15 (binary_formula)
+
+
+State 37
+
+   13 binary_formula: formula . AND formula
+   14               | formula . OR formula
+   15               | formula . UNTIL formula
+   16               | formula . UNLESS formula
+   16               | formula UNLESS formula .
+   17               | formula . IMPLICATION formula
+   18               | formula . EQUIVALENCE formula
+
+    AND          shift, and go to state 23
+    OR           shift, and go to state 24
+    IMPLICATION  shift, and go to state 25
+    EQUIVALENCE  shift, and go to state 26
+    UNTIL        shift, and go to state 27
+    UNLESS       shift, and go to state 28
+
+    $default  reduce using rule 16 (binary_formula)
 
 
 State 38
@@ -667,11 +667,11 @@ State 38
 
     AND                   shift, and go to state 23
     OR                    shift, and go to state 24
+    IMPLICATION           shift, and go to state 25
+    EQUIVALENCE           shift, and go to state 26
+    UNTIL                 shift, and go to state 27
+    UNLESS                shift, and go to state 28
     COMMA                 shift, and go to state 42
-    UNLESS                shift, and go to state 25
-    UNTIL                 shift, and go to state 26
-    IMPLICATION           shift, and go to state 27
-    EQUIVALENCE           shift, and go to state 28
     RIGHT_SQUARE_BRACKET  shift, and go to state 43
 
 
@@ -697,11 +697,11 @@ State 40
 
     AND                   shift, and go to state 23
     OR                    shift, and go to state 24
+    IMPLICATION           shift, and go to state 25
+    EQUIVALENCE           shift, and go to state 26
+    UNTIL                 shift, and go to state 27
+    UNLESS                shift, and go to state 28
     COMMA                 shift, and go to state 42
-    UNLESS                shift, and go to state 25
-    UNTIL                 shift, and go to state 26
-    IMPLICATION           shift, and go to state 27
-    EQUIVALENCE           shift, and go to state 28
     RIGHT_SQUARE_BRACKET  shift, and go to state 46
 
 
@@ -718,16 +718,16 @@ State 42
 
    11 formula_list_at_least_two: formula COMMA . formula
 
-    NAME          shift, and go to state 3
-    AND_TEXT      shift, and go to state 4
-    OR_TEXT       shift, and go to state 5
+    FALSE         shift, and go to state 3
+    TRUE          shift, and go to state 4
+    NAME          shift, and go to state 5
     NOT           shift, and go to state 6
-    ALWAYS        shift, and go to state 7
-    NEXT          shift, and go to state 8
-    SOMETIME      shift, and go to state 9
-    LEFT_BRACKET  shift, and go to state 10
-    FALSE         shift, and go to state 11
-    TRUE          shift, and go to state 12
+    AND_TEXT      shift, and go to state 7
+    OR_TEXT       shift, and go to state 8
+    NEXT          shift, and go to state 9
+    ALWAYS        shift, and go to state 10
+    SOMETIME      shift, and go to state 11
+    LEFT_BRACKET  shift, and go to state 12
 
     formula         go to state 48
     binary_formula  go to state 14
@@ -745,16 +745,16 @@ State 44
 
    12 formula_list_at_least_two: formula_list_at_least_two COMMA . formula
 
-    NAME          shift, and go to state 3
-    AND_TEXT      shift, and go to state 4
-    OR_TEXT       shift, and go to state 5
+    FALSE         shift, and go to state 3
+    TRUE          shift, and go to state 4
+    NAME          shift, and go to state 5
     NOT           shift, and go to state 6
-    ALWAYS        shift, and go to state 7
-    NEXT          shift, and go to state 8
-    SOMETIME      shift, and go to state 9
-    LEFT_BRACKET  shift, and go to state 10
-    FALSE         shift, and go to state 11
-    TRUE          shift, and go to state 12
+    AND_TEXT      shift, and go to state 7
+    OR_TEXT       shift, and go to state 8
+    NEXT          shift, and go to state 9
+    ALWAYS        shift, and go to state 10
+    SOMETIME      shift, and go to state 11
+    LEFT_BRACKET  shift, and go to state 12
 
     formula         go to state 50
     binary_formula  go to state 14
@@ -794,10 +794,10 @@ State 48
 
     AND          shift, and go to state 23
     OR           shift, and go to state 24
-    UNLESS       shift, and go to state 25
-    UNTIL        shift, and go to state 26
-    IMPLICATION  shift, and go to state 27
-    EQUIVALENCE  shift, and go to state 28
+    IMPLICATION  shift, and go to state 25
+    EQUIVALENCE  shift, and go to state 26
+    UNTIL        shift, and go to state 27
+    UNLESS       shift, and go to state 28
 
     $default  reduce using rule 11 (formula_list_at_least_two)
 
@@ -821,10 +821,10 @@ State 50
 
     AND          shift, and go to state 23
     OR           shift, and go to state 24
-    UNLESS       shift, and go to state 25
-    UNTIL        shift, and go to state 26
-    IMPLICATION  shift, and go to state 27
-    EQUIVALENCE  shift, and go to state 28
+    IMPLICATION  shift, and go to state 25
+    EQUIVALENCE  shift, and go to state 26
+    UNTIL        shift, and go to state 27
+    UNLESS       shift, and go to state 28
 
     $default  reduce using rule 12 (formula_list_at_least_two)
 

@@ -7,9 +7,17 @@ CC=gcc
 #LIBS=-lm -lpthread
 #EXTRALIBS=-ltcmalloc
 
-CFLAGS=-O3 
-LFLAGS=-O3
-PFLAGS=-O3
+#production
+
+#CFLAGS=-O3 -Wall
+#LFLAGS=-O3
+#PFLAGS=-O3
+
+# debugging and testing
+
+CFLAGS=-Wall -g -O0
+LFLAGS=-Wall -g -O0
+PFLAGS=-g -O0
 
 SRCS=helpers.c snf.c clauses.c renaming.c simpl.c main.c
 OBJS = $(SRCS:.c=.o)

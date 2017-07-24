@@ -38,7 +38,7 @@ tree* buildTreeFromAtLeastTwoList(int op, list *l);
 
 %error-verbose
 
-%token NAME AND AND_TEXT OR OR_TEXT NOT ALWAYS NEXT SOMETIME LEFT_BRACKET RIGHT_BRACKET COMMA UNLESS UNTIL IMPLICATION EQUIVALENCE LEFT_SQUARE_BRACKET RIGHT_SQUARE_BRACKET FALSE TRUE
+%token FALSE TRUE NAME NOT AND AND_TEXT OR OR_TEXT IMPLICATION EQUIVALENCE NEXT ALWAYS SOMETIME UNTIL UNLESS LEFT_BRACKET RIGHT_BRACKET COMMA LEFT_SQUARE_BRACKET RIGHT_SQUARE_BRACKET 
 
 %union {
  char* cstring;
@@ -60,7 +60,7 @@ tree* buildTreeFromAtLeastTwoList(int op, list *l);
 
 formulae:
 		{
-			$$ = list_New();
+			$$ = NULL;
 		}
 	| formulae formula
 		{
@@ -102,6 +102,7 @@ formula:
         tree *t = tree_TreeId($1);
         tree_SetOp(NAME, t);
         st_InsertEntry($1, &st);
+        free($1);
         $$ = t;
     };
 

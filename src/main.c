@@ -20,22 +20,38 @@ int main(int argc, char** argv) {
 
 	yyparse();
 
-    printf("Formulae before: ");
-    list_Print(formula_list);
-
     if(formula_list == NULL){
         printf("No formulae found!\n");
         return 1;
     }
 
-    /*simplification(formula_list);*/
+    printf("Formulae before:\n");
+    list_Print(formula_list);
+    printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
+
+    list_Sort(&formula_list);
+    mergesort(&formula_list);
+    printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
+    printf("Formulae after sorting:\n");
+    list_Print(formula_list);
+    printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
+    initializeRules();
+
+    do{
+        simplified = 0;
+        simplification(formula_list);
+    } while(simplified && !list_IsEmpty(formula_list));
+
     snf();
 
-    /*Printing read formulae and symbol table*/
-    printf("Formulae after: ");
+    printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
+    printf("Formulae after simplification:\n");
     list_Print(formula_list);
     printf("Symbol table: ");
     st_Print(st);
+
+    list_Delete(&formula_list);
+    st_Delete(&st);
 
     return 0;
 }

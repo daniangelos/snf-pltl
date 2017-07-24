@@ -56,8 +56,13 @@ list* list_Tail(list *l) ;
 void* list_Element(list *l) ;
 void* list_FirstElement(list *l) ;
 list* list_PushBack(list *l, void *element) ;
+void list_UnifyChildren(list **l, int op);
 list* list_List(void *element) ;
 void list_Delete(list **_l) ;
+void list_DeleteElem(list **prev, list **pos);
+int formula_Compare(tree* a, tree* b);
+void mergesort(list** headRef);
+void list_Sort(list **l);
 void list_Print(list *l);
 
 /* Tree Functions */
@@ -78,5 +83,6 @@ void tree_Delete(tree **t);
 /* Symbol Table Functions */
 void st_InsertEntry(char *name, symbol_table **st);
 void st_Print(symbol_table *st);
+void st_Delete(symbol_table **st);
 
 #endif //HELPERS_H
