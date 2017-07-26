@@ -25,27 +25,29 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    printf("Formulae before:\n");
+    printf("Initial formulae:\n");
     list_Print(formula_list);
     printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
-
     list_Sort(&formula_list);
     mergesort(&formula_list);
     printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
     printf("Formulae after sorting:\n");
     list_Print(formula_list);
-    printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
-    initializeRules();
 
-    do{
+    printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
+    /*do{*/
         simplified = 0;
         simplification(formula_list);
-    } while(simplified && !list_IsEmpty(formula_list));
-
-    snf();
+    /*} while(simplified && !list_IsEmpty(formula_list));*/
 
     printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
     printf("Formulae after simplification:\n");
+    list_Print(formula_list);
+
+    printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
+    snf(formula_list);
+    printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
+    printf("Formulae in normal form:\n");
     list_Print(formula_list);
     printf("Symbol table: ");
     st_Print(st);

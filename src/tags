@@ -14,14 +14,9 @@ BEGIN	lex.yy.c	113;"	d	file:
 BISON	Makefile	/^BISON=bison$/;"	m
 BISONFLAGS	Makefile	/^BISONFLAGS=-v -d$/;"	m
 CC	Makefile	/^CC=gcc$/;"	m
-CFLAGS	Makefile	/^CFLAGS=-O3 -Wall$/;"	m
-CINITIAL	clauses.h	4;"	d
-CLAUSES_H	clauses.h	2;"	d
-CLITERAL	clauses.h	5;"	d
+CFLAGS	Makefile	/^CFLAGS=-Wall -g -O0$/;"	m
 COMMA	parser.tab.c	/^    COMMA = 275,$/;"	e	enum:yytokentype	file:
 COMMA	parser.tab.h	/^    COMMA = 275,$/;"	e	enum:yytokentype
-CSOMETIME	clauses.h	7;"	d
-CSTEP	clauses.h	6;"	d
 DECLTYPE	uthash.h	39;"	d
 DECLTYPE	uthash.h	42;"	d
 DECLTYPE	uthash.h	46;"	d
@@ -134,7 +129,7 @@ LEFT_BRACKET	parser.tab.c	/^    LEFT_BRACKET = 273,$/;"	e	enum:yytokentype	file:
 LEFT_BRACKET	parser.tab.h	/^    LEFT_BRACKET = 273,$/;"	e	enum:yytokentype
 LEFT_SQUARE_BRACKET	parser.tab.c	/^    LEFT_SQUARE_BRACKET = 276,$/;"	e	enum:yytokentype	file:
 LEFT_SQUARE_BRACKET	parser.tab.h	/^    LEFT_SQUARE_BRACKET = 276,$/;"	e	enum:yytokentype
-LFLAGS	Makefile	/^LFLAGS=-O3$/;"	m
+LFLAGS	Makefile	/^LFLAGS=-Wall -g -O0$/;"	m
 MUR_FMIX	uthash.h	666;"	d
 MUR_GETBLOCK	uthash.h	644;"	d
 MUR_GETBLOCK	uthash.h	660;"	d
@@ -164,18 +159,19 @@ OR_TEXT	parser.tab.c	/^    OR_TEXT = 265,$/;"	e	enum:yytokentype	file:
 OR_TEXT	parser.tab.h	/^    OR_TEXT = 265,$/;"	e	enum:yytokentype
 PARSERC	Makefile	/^PARSERC = lex.yy.c parser.tab.c$/;"	m
 PARSEROBJS	Makefile	/^PARSEROBJS = lex.yy.o parser.tab.o$/;"	m
-PFLAGS	Makefile	/^PFLAGS=-O3$/;"	m
+PFLAGS	Makefile	/^PFLAGS=-g -O0$/;"	m
 REJECT	lex.yy.c	499;"	d	file:
 RENAMING_H	renaming.h	2;"	d
 RIGHT_BRACKET	parser.tab.c	/^    RIGHT_BRACKET = 274,$/;"	e	enum:yytokentype	file:
 RIGHT_BRACKET	parser.tab.h	/^    RIGHT_BRACKET = 274,$/;"	e	enum:yytokentype
 RIGHT_SQUARE_BRACKET	parser.tab.c	/^    RIGHT_SQUARE_BRACKET = 277$/;"	e	enum:yytokentype	file:
 RIGHT_SQUARE_BRACKET	parser.tab.h	/^    RIGHT_SQUARE_BRACKET = 277$/;"	e	enum:yytokentype
+SIMPFIRSTRULE	simpl.h	7;"	d
 SIMPL_H	simpl.h	2;"	d
 SNF_H	snf.h	2;"	d
 SOMETIME	parser.tab.c	/^    SOMETIME = 270,$/;"	e	enum:yytokentype	file:
 SOMETIME	parser.tab.h	/^    SOMETIME = 270,$/;"	e	enum:yytokentype
-SRCS	Makefile	/^SRCS=helpers.c snf.c clauses.c renaming.c simpl.c main.c$/;"	m
+SRCS	Makefile	/^SRCS=helpers.c snf.c renaming.c simpl.c main.c$/;"	m
 SortedMerge	helpers.c	/^list* SortedMerge(list* a, list* b)$/;"	f
 TARGET	Makefile	/^TARGET=pltl$/;"	m
 TRUE	parser.tab.c	/^    TRUE = 259,$/;"	e	enum:yytokentype	file:
@@ -342,7 +338,6 @@ _Noreturn	parser.tab.c	246;"	d	file:
 _Noreturn	parser.tab.c	248;"	d	file:
 __STDC_LIMIT_MACROS	lex.yy.c	39;"	d	file:
 alloca	parser.tab.c	293;"	d	file:
-atomicOcc	simpl.c	/^int atomicOcc = 0;$/;"	v
 binary_formula	parser.y	/^binary_formula:$/;"	l
 bloom_bv	uthash.h	/^   uint8_t *bloom_bv;$/;"	m	struct:UT_hash_table
 bloom_nbits	uthash.h	/^   uint8_t bloom_nbits;$/;"	m	struct:UT_hash_table
@@ -350,9 +345,8 @@ bloom_sig	uthash.h	/^   uint32_t bloom_sig; \/* used only to test bloom exists i
 buckets	uthash.h	/^   UT_hash_bucket *buckets;$/;"	m	struct:UT_hash_table
 buildTreeFromAtLeastTwoList	parser.tab.c	/^tree* buildTreeFromAtLeastTwoList(int op, list *l)$/;"	f
 checkEquality	simpl.c	/^int checkEquality(list *subf1, list *subf2){$/;"	f
+checkUnarity	simpl.c	/^void checkUnarity(tree *formula){$/;"	f
 children	helpers.h	/^	list *children;$/;"	m	struct:tree
-clause	clauses.h	/^struct clause{$/;"	s
-clause	clauses.h	/^typedef struct clause clause;$/;"	t	typeref:struct:clause
 clist	parser.tab.c	/^ struct list* clist;$/;"	m	union:YYSTYPE	typeref:struct:YYSTYPE::list	file:
 clist	parser.tab.h	/^ struct list* clist;$/;"	m	union:YYSTYPE	typeref:struct:YYSTYPE::list
 count	uthash.h	/^   unsigned count;$/;"	m	struct:UT_hash_bucket
@@ -385,7 +379,6 @@ get16bits	uthash.h	580;"	d
 get16bits	uthash.h	583;"	d
 get16bits	uthash.h	587;"	d
 hashv	uthash.h	/^   unsigned hashv;                   \/* result of hash-fcn(key)        *\/$/;"	m	struct:UT_hash_handle
-hh	clauses.h	/^    UT_hash_handle hh;$/;"	m	struct:literalshash
 hh	helpers.h	/^    UT_hash_handle hh;$/;"	m	struct:symbol_table
 hh_head	uthash.h	/^   struct UT_hash_handle *hh_head;$/;"	m	struct:UT_hash_bucket	typeref:struct:UT_hash_bucket::UT_hash_handle
 hh_next	uthash.h	/^   struct UT_hash_handle *hh_next;   \/* next hh in bucket order        *\/$/;"	m	struct:UT_hash_handle	typeref:struct:UT_hash_handle::UT_hash_handle
@@ -396,9 +389,9 @@ id	helpers.h	/^	char *id;$/;"	m	struct:tree
 id	helpers.h	/^    char *id;$/;"	m	struct:symbol_table
 ideal_chain_maxlen	uthash.h	/^   unsigned ideal_chain_maxlen;$/;"	m	struct:UT_hash_table
 ineff_expands	uthash.h	/^   unsigned ineff_expands, noexpand;$/;"	m	struct:UT_hash_table
+initializeRules	simpl.c	/^void initializeRules(){$/;"	f
 key	uthash.h	/^   void *key;                        \/* ptr to enclosing struct's key  *\/$/;"	m	struct:UT_hash_handle
 keylen	uthash.h	/^   unsigned keylen;                  \/* enclosing struct's key len     *\/$/;"	m	struct:UT_hash_handle
-left	clauses.h	/^    struct literalshash *left;$/;"	m	struct:clause	typeref:struct:clause::literalshash
 list	helpers.h	/^struct list {$/;"	s
 list	helpers.h	/^typedef struct list list;$/;"	t	typeref:struct:list
 list_Delete	helpers.c	/^void list_Delete(list **l) {$/;"	f
@@ -416,14 +409,9 @@ list_Tail	helpers.c	/^list* list_Tail(list *l) {$/;"	f
 list_UnifyChildren	helpers.c	/^void list_UnifyChildren(list **l, int op){$/;"	f
 list_UnifyHead	helpers.c	/^void list_UnifyHead(list **l, tree* head, int op, tree* parent){$/;"	f
 list_UnifyTail	helpers.c	/^void list_UnifyTail(list **l, list **tail, tree *element, int op, tree* parent){$/;"	f
-literal	clauses.h	/^    int literal;$/;"	m	struct:literalshash
-literalshash	clauses.h	/^struct literalshash{$/;"	s
-literalshash	clauses.h	/^typedef struct literalshash literalshash;$/;"	t	typeref:struct:literalshash
 log2_num_buckets	uthash.h	/^   unsigned num_buckets, log2_num_buckets;$/;"	m	struct:UT_hash_table
 main	main.c	/^int main(int argc, char** argv) {$/;"	f
-max_literal	clauses.h	/^    int max_literal;$/;"	m	struct:clause
 mergesort	helpers.c	/^void mergesort(list** headRef)$/;"	f
-min_literal	clauses.h	/^    int min_literal;$/;"	m	struct:clause
 next	helpers.h	/^	list *next;$/;"	m	struct:list
 next	uthash.h	/^   void *next;                       \/* next element in app order      *\/$/;"	m	struct:UT_hash_handle
 noexpand	uthash.h	/^   unsigned ineff_expands, noexpand;$/;"	m	struct:UT_hash_table
@@ -435,16 +423,17 @@ op	helpers.h	/^	int op;$/;"	m	struct:tree
 op_Print	helpers.c	/^void op_Print(int op){$/;"	f
 parent	helpers.h	/^	tree *parent;$/;"	m	struct:tree
 prev	uthash.h	/^   void *prev;                       \/* prev element in app order      *\/$/;"	m	struct:UT_hash_handle
-right	clauses.h	/^    struct literalshash *right;$/;"	m	struct:clause	typeref:struct:clause::literalshash
 short	parser.tab.c	171;"	d	file:
 signature	uthash.h	/^   uint32_t signature; \/* used only to find hash tables in external analysis *\/$/;"	m	struct:UT_hash_table
 simplStep	simpl.c	/^void simplStep(tree **formula, list **prev, list **pos){$/;"	f
 simplification	simpl.c	/^void simplification(list *formulae){$/;"	f
-size	clauses.h	/^    int size;$/;"	m	struct:clause
-snf	snf.c	/^void snf(){$/;"	f
+simplified	simpl.h	/^int simplified;$/;"	v
+simplrules	simpl.h	/^int simplrules[45];$/;"	v
+snf	snf.c	/^void snf(list *formulae){$/;"	f
 st	parser.tab.c	/^symbol_table *st = NULL;$/;"	v
 st_Delete	helpers.c	/^void st_Delete(symbol_table **st){$/;"	f
 st_InsertEntry	helpers.c	/^void st_InsertEntry(char *name, symbol_table **st){$/;"	f
+st_NewSymbol	helpers.c	/^char* st_NewSymbol(symbol_table *st){$/;"	f
 st_Print	helpers.c	/^void st_Print(symbol_table *st){$/;"	f
 symbol_table	helpers.h	/^struct symbol_table{$/;"	s
 symbol_table	helpers.h	/^typedef struct symbol_table symbol_table;$/;"	t	typeref:struct:symbol_table
@@ -467,7 +456,6 @@ tree_SetParent	helpers.c	/^void tree_SetParent(tree *t, tree *parent) {$/;"	f
 tree_TreeId	helpers.c	/^tree* tree_TreeId(char *id){$/;"	f
 tree_TreeOp	helpers.c	/^tree* tree_TreeOp(int op) {$/;"	f
 truthParenting	simpl.c	/^void truthParenting(tree **formula, list **prev, list **pos){$/;"	f
-type	clauses.h	/^    int type; \/\/ initial, literal, step or sometime$/;"	m	struct:clause
 uint32_t	uthash.h	/^typedef unsigned int uint32_t;$/;"	t
 uint8_t	uthash.h	/^typedef unsigned char uint8_t;$/;"	t
 unary_formula	parser.y	/^unary_formula:$/;"	l
@@ -479,6 +467,7 @@ uthash_malloc	uthash.h	85;"	d
 uthash_memcmp	uthash.h	94;"	d
 uthash_noexpand_fyi	uthash.h	98;"	d
 uthash_strlen	uthash.h	91;"	d
+variant_one	snf.c	/^tree* variant_one(char *symbol, tree* formula){$/;"	f
 yy_accept	lex.yy.c	/^static yyconst flex_int16_t yy_accept[72] =$/;"	v	file:
 yy_at_bol	lex.yy.c	/^	int yy_at_bol;$/;"	m	struct:yy_buffer_state	file:
 yy_base	lex.yy.c	/^static yyconst flex_uint16_t yy_base[74] =$/;"	v	file:

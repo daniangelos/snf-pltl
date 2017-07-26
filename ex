@@ -1,1 +1,1 @@
-a | false | (a & true)
+((p&a) until ~(a&p)) & true

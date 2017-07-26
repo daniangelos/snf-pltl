@@ -64,6 +64,8 @@ int formula_Compare(tree* a, tree* b);
 void mergesort(list** headRef);
 void list_Sort(list **l);
 void list_Print(list *l);
+void formula_Negate(tree **formula);
+tree* formula_SNF(char *id, tree *formula);
 
 /* Tree Functions */
 tree* tree_New() ;
@@ -83,6 +85,7 @@ void tree_Delete(tree **t);
 /* Symbol Table Functions */
 void st_InsertEntry(char *name, symbol_table **st);
 void st_Print(symbol_table *st);
+char* st_NewSymbol(symbol_table *st);
 void st_Delete(symbol_table **st);
 
 #endif //HELPERS_H

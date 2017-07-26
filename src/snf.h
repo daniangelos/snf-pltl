@@ -2,9 +2,9 @@
 #define SNF_H
 
 #include "helpers.h"
-#include "uthash.h"
-#include "clauses.h"
 
-void snf();
+void snf(list *formulae);
+tree* variant_one(char *symbol, tree* formula);
+tree* negated_variant_one(char *symbol, tree* formula);
 
 #endif //SNF_H

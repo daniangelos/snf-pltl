@@ -19,7 +19,7 @@ CFLAGS=-Wall -g -O0
 LFLAGS=-Wall -g -O0
 PFLAGS=-g -O0
 
-SRCS=helpers.c snf.c clauses.c renaming.c simpl.c main.c
+SRCS=helpers.c snf.c renaming.c simpl.c main.c
 OBJS = $(SRCS:.c=.o)
 
 PARSERC = lex.yy.c parser.tab.c

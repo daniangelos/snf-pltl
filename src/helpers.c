@@ -287,6 +287,9 @@ list* SortedMerge(list* a, list* b)
   return(result);
 }
 
+/* mergesort addapted from 
+ * http://www.geeksforgeeks.org/merge-sort-for-linked-list/
+ * on July, 2017 */
 void mergesort(list** headRef)
 {
   list* head = *headRef;
@@ -493,6 +496,36 @@ void tree_Delete(tree **t) {
     *t = NULL;
 }
 
+void formula_Negate(tree **formula){
+    if(*formula == NULL) return;
+
+    tree *newnode = tree_TreeOp(NOT);
+    newnode->parent = (*formula)->parent;
+    (*formula)->parent = newnode;
+    newnode->children = list_New();
+    newnode->children->element = *formula;
+    *formula = newnode;
+}
+
+/* Return (always (or (~id, formula))) */
+tree* formula_SNF(char *id, tree *formula){
+    tree *always = tree_TreeOp(ALWAYS);
+    tree *or = tree_TreeOp(OR);
+    tree *name = tree_TreeOp(NAME);
+    tree_SetId(id, name);
+    formula_Negate(&name);
+    or->children = list_New();
+    or->children->next = list_New();
+    or->children->element = name;
+    or->children->next->element = formula;
+    always->parent = formula->parent;
+    name->parent = formula->parent = or;
+    always->children = list_New();
+    always->children->element = or;
+    or->parent = always;
+    return always;
+}
+
 /*Symbol Table Functions*/
 
 void st_InsertEntry(char *name, symbol_table **st){
@@ -519,6 +552,12 @@ void st_Print(symbol_table *st){
     for(it = st; it != NULL; it = it->hh.next){
         printf("Prop symbol: %s \tOccurrences: %d\n", it->id, it->occurrences);
     }
+}
+
+char* st_NewSymbol(symbol_table *st){
+    char *new = strdup("p");
+
+    return new;
 }
 
 void st_Delete(symbol_table **st){

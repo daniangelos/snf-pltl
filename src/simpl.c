@@ -7,25 +7,21 @@ extern struct list *formula_list;
 extern struct symbol_table *st;
 
 
-void initializeRules(){
-    for(int i = 0; i<45; i++) simplrules[i] = 0;
-}
-
 void simplification(list *formulae){
     /* Nothing to be done */
     if(formulae == NULL) return;
 
 
-    /* For each formula in the list, apply the simplifications steps
-     * in all its subformulas as long as it's still simplification to do*/
-        list *it = formulae;
-        list *prev = NULL;
-        while(!list_IsEmpty(it)){
-            tree *element = (tree*) list_Element(it);
-            simplStep(&element, &prev, &it);
-            prev = it;
-            it = list_Tail(it);
-        }
+    /* For each formula in the list, apply the simplifications steps */
+    list *it = formulae;
+    list *prev = NULL;
+    while(!list_IsEmpty(it)){
+        tree *element = (tree*) list_Element(it);
+        simplStep(&element, &prev, &it);
+        prev = it;
+        it = list_Tail(it);
+    }
+
     return;
 }
 
@@ -37,12 +33,11 @@ void simplStep(tree **formula, list **prev, list **pos){
     switch(op){
         case TRUE:
             simplified = 1;
-            truthParenting(formula, prev, pos);
+            truthSimplification(formula, prev, pos);
             break;
         case FALSE:
             simplified = 1;
-            falseParenting(formula, prev, pos);
-            /*if(formula == NULL) printf(":)\n");*/
+            falseSimplification(formula, prev, pos);
             break;
         case NAME: /* Nothing to do, simply */ 
             break;
@@ -66,7 +61,7 @@ void simplStep(tree **formula, list **prev, list **pos){
     }
 }
 
-void truthParenting(tree **formula, list **prev, list **pos){
+void truthSimplification(tree **formula, list **prev, list **pos){
     if(*formula == NULL || (*formula)->parent == NULL) return;
 
     tree *p = (*formula)->parent;
@@ -108,15 +103,35 @@ void truthParenting(tree **formula, list **prev, list **pos){
         case NEXT:
         case SOMETIME:
         case OR:
+        case UNLESS:
             /* Replace parent by true */
             p->op = op;
             list_Delete(&(p->children));
             *pos = *prev = NULL;
             break;
+        case UNTIL:
+            if(((tree*)p->children->element)->op == TRUE){
+                /* true until phi = sometime phi */
+                p->op = SOMETIME;
+                p->children = (*pos)->next;
+                (*pos)->next = NULL;
+                list_Delete(pos);
+            }
+            else {
+                /* phi until true = true */
+                p->op = op;
+                list_Delete(&(p->children));
+                *pos = *prev = NULL;
+            }
+
+            break;
+    }
+    if(p != NULL && p->parent != NULL){
+        mergesort(&p->parent->children);
     }
 }
 
-void falseParenting(tree **formula, list **prev,  list **pos){
+void falseSimplification(tree **formula, list **prev,  list **pos){
     if(*formula == NULL || (*formula)->parent == NULL) return;
 
     tree *p = (*formula)->parent;
@@ -140,13 +155,16 @@ void falseParenting(tree **formula, list **prev,  list **pos){
             } 
             else if(*prev == NULL) {
                 if((*pos)->next == NULL){
-                    /* Remove unary conjunction */
+                    /* Remove unary disjunction */
                     p->op = elem->op;
                     if (tree_Id(elem)) p->id = strdup(elem->id);
                     p->children = elem->children;
                     elem->children = NULL;
                     tree_Delete(&elem);
                     *pos = *prev = NULL;
+                    if(p->parent != NULL){
+                        mergesort(&p->parent->children);
+                    }
                 }
                 else p->children = *pos;
             }
@@ -163,6 +181,17 @@ void falseParenting(tree **formula, list **prev,  list **pos){
             list_Delete(&(p->children));
             *pos = *prev = NULL;
             break;
+        case UNTIL:
+            /* false until phi = phi */
+            /* phi until false = false */
+            break;
+        case UNLESS:
+            /* false unless phi = phi */
+            /* phi unless false = always phi */
+            break;
+    }
+    if(p != NULL && p->parent != NULL){
+        mergesort(&p->parent->children);
     }
 }
 
@@ -302,6 +331,9 @@ void findRepeated(int op, list *children){
                     printf("Unexpected operator. Something went wrong.\n");
                     abort();
             }
+            if(p != NULL && p->parent != NULL){
+                mergesort(&p->parent->children);
+            }
         }
         if(it == NULL || it->next == NULL) break;
     }
@@ -320,5 +352,8 @@ void checkUnarity(tree *formula){
         elem->children = NULL;
         if(tree_Id(elem)) {formula->id = elem->id; elem->id = NULL;}
         list_Delete(&it);
+        if(formula->parent != NULL){
+            mergesort(&formula->parent->children);
+        }
     }
 }
