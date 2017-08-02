@@ -35,20 +35,21 @@ int main(int argc, char** argv) {
     list_Print(formula_list);
 
     printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
-    /*do{*/
+    do{
         simplified = 0;
         simplification(formula_list);
-    /*} while(simplified && !list_IsEmpty(formula_list));*/
+    } while(simplified && !list_IsEmpty(formula_list));
 
     printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
     printf("Formulae after simplification:\n");
     list_Print(formula_list);
 
-    printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
-    snf(formula_list);
-    printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
-    printf("Formulae in normal form:\n");
-    list_Print(formula_list);
+    /*printf("~~~~~~~~~~~~~~~~~~~~~~~\n");*/
+    /*snf(formula_list);*/
+    /*printf("~~~~~~~~~~~~~~~~~~~~~~~\n");*/
+    /*printf("Formulae in normal form:\n");*/
+    /*list_Print(formula_list);*/
+
     printf("Symbol table: ");
     st_Print(st);
 

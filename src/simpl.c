@@ -48,7 +48,7 @@ void simplStep(tree **formula, list **prev, list **pos){
         case UNTIL:
         case IMPLICATION:
         case EQUIVALENCE:
-            findRepeated(op, (*formula)->children);
+            findRepeated(op, *formula, (*formula)->children);
         case ALWAYS:
         case NEXT:
         case SOMETIME:
@@ -62,7 +62,11 @@ void simplStep(tree **formula, list **prev, list **pos){
 }
 
 void truthSimplification(tree **formula, list **prev, list **pos){
-    if(*formula == NULL || (*formula)->parent == NULL) return;
+    if(*formula == NULL) return;
+    if((*formula)->parent == NULL) {
+        simplified = 0;
+        return;
+    }
 
     tree *p = (*formula)->parent;
     tree *elem = NULL;
@@ -132,7 +136,11 @@ void truthSimplification(tree **formula, list **prev, list **pos){
 }
 
 void falseSimplification(tree **formula, list **prev,  list **pos){
-    if(*formula == NULL || (*formula)->parent == NULL) return;
+    if(*formula == NULL) return;
+    if((*formula)->parent == NULL) {
+        simplified = 0;
+        return;
+    }
 
     tree *p = (*formula)->parent;
     tree *elem = NULL;
@@ -222,7 +230,7 @@ int checkEquality(list *subf1, list *subf2){
     return 1;
 }
 
-void findRepeated(int op, list *children){
+void findRepeated(int op, tree *parent, list *children){
     if(children == NULL) return;
     if(children->next == NULL) return;
 
@@ -235,8 +243,6 @@ void findRepeated(int op, list *children){
         curr = (tree*) list_Element(it);
         next = (tree*) list_Element(it->next);
         negation = 0;
-
-        tree *p = (tree*) curr->parent;
 
         if(curr->op == NOT){
             if(next->op != NOT){
@@ -263,16 +269,16 @@ void findRepeated(int op, list *children){
                 case AND:
                     if(negation){
                         /* Replace parent by false because phi & ~phi*/
-                        p->op = FALSE;
-                        list_Delete(&(p->children));
+                        parent->op = FALSE;
+                        list_Delete(&(parent->children));
                         it = NULL;
                         break;
                     }
                 case OR:
                     if(negation){
                         /* Replace parent by true because phi | ~phi*/
-                        p->op = TRUE;
-                        list_Delete(&(p->children));
+                        parent->op = TRUE;
+                        list_Delete(&(parent->children));
                         it = NULL;
                         break;
                     }
@@ -288,22 +294,22 @@ void findRepeated(int op, list *children){
                 case EQUIVALENCE:
                     if(negation){
                         /* Replace parent by false because phi <-> ~phi */
-                        p->op = FALSE;
-                        list_Delete(&(p->children));
+                        parent->op = FALSE;
+                        list_Delete(&(parent->children));
                         it = NULL;
                         break;
                     }
                     /*Replace parent by true whether phi -> phi or phi <-> phi*/
-                    p->op = TRUE;
-                    list_Delete(&(p->children));
+                    parent->op = TRUE;
+                    list_Delete(&(parent->children));
                     it = NULL;
                     break;
                 case UNTIL:
                     if(negation){
                         /* Replace ~phi U phi by sometime phi */
                         /* Replace phi U ~phi by sometime ~ phi */ 
-                        p->op = SOMETIME;
-                        p->children = it->next;
+                        parent->op = SOMETIME;
+                        parent->children = it->next;
                         it->next = NULL;
                         list_Delete(&it);
                         break;
@@ -312,17 +318,17 @@ void findRepeated(int op, list *children){
                     if(negation){
                         /* Replace parent by true wheter (phi W ~phi) or 
                          * (~phi W phi) */
-                        p->op = TRUE;
-                        list_Delete(&(p->children));
+                        parent->op = TRUE;
+                        list_Delete(&(parent->children));
                         it = NULL;
                         break;
                     }
                     /* Replace parent by phi wheter (phi U phi) or 
                      * (phi W phi) */
-                    p->op = curr->op;
-                    p->children = curr->children;
+                    parent->op = curr->op;
+                    parent->children = curr->children;
                     curr->children = NULL;
-                    if(tree_Id(curr)) p->id = strdup(curr->id);
+                    if(tree_Id(curr)) parent->id = strdup(curr->id);
                     tree_Delete(&curr);
                     tree_Delete(&next);
                     it = NULL;
@@ -331,8 +337,8 @@ void findRepeated(int op, list *children){
                     printf("Unexpected operator. Something went wrong.\n");
                     abort();
             }
-            if(p != NULL && p->parent != NULL){
-                mergesort(&p->parent->children);
+            if(parent != NULL && parent->parent != NULL){
+                mergesort(&parent->parent->children);
             }
         }
         if(it == NULL || it->next == NULL) break;
