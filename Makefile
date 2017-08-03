@@ -20,3 +20,6 @@ valgrind: $(TARGET) ex
 bigcase: $(TARGET) 
 	valgrind --leak-check=yes ./pltl <../benchmarks/anzu/amba/amba_c/spec_c_11.negated.tspass 2>valgrind.bigcase
 
+script: tests/scripts/simpl.py
+	tests/scripts/simpl.py rm
+
