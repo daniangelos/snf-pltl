@@ -49,10 +49,16 @@ void simplStep(tree **formula, list **prev, list **pos){
         case IMPLICATION:
         case EQUIVALENCE:
             findRepeated(op, *formula, (*formula)->children);
-        case ALWAYS:
         case NEXT:
-        case SOMETIME:
         case NOT:
+            simplification((*formula)->children);
+            break;
+        case ALWAYS:
+            alwaysSimplification(formula, prev, pos);
+            simplification((*formula)->children);
+            break;
+        case SOMETIME:
+            sometimeSimplification(formula, prev, pos);
             simplification((*formula)->children);
             break;
         default:
@@ -102,19 +108,75 @@ void truthSimplification(tree **formula, list **prev, list **pos){
             else p->children = *prev;
             break;
         case NOT:
-            op = FALSE;
+            tree_ReplaceParent(FALSE, p, prev, pos);
+            break;
         case ALWAYS:
+            tree_ReplaceParent(op, p, prev, pos);
+            break;
         case NEXT:
+            tree_ReplaceParent(op, p, prev, pos);
+            break;
         case SOMETIME:
+            tree_ReplaceParent(op, p, prev, pos);
+            break;
         case OR:
+            tree_ReplaceParent(op, p, prev, pos);
+            break;
         case UNLESS:
-            /* Replace parent by true */
-            p->op = op;
-            list_Delete(&(p->children));
-            *pos = *prev = NULL;
+            tree_ReplaceParent(op, p, prev, pos);
+            break;
+        case IMPLICATION:
+            if(*prev == NULL){
+                /* true -> phi = phi */
+                elem = (tree*) (*pos)->next->element;
+                p->children = NULL;
+                (*pos)->next->element = NULL;
+                list_Delete(&p->children);
+                list_Delete(pos);
+                p->op = elem->op;
+                if(tree_Id(elem)) p->id = strdup(elem->id);
+                p->children = elem->children;
+                elem->children = NULL;
+                tree_Delete(&elem);
+                *pos = NULL;
+            }
+            else{
+                /* phi -> true = true */
+                tree_ReplaceParent(op, p, prev, pos);
+            }
+            break;
+        case EQUIVALENCE:
+            if(*prev == NULL){
+                /* true <-> phi = phi */
+                elem = (tree*) (*pos)->next->element;
+                p->children = NULL;
+                (*pos)->next->element = NULL;
+                list_Delete(&p->children);
+                list_Delete(pos);
+                p->op = elem->op;
+                if(tree_Id(elem)) p->id = strdup(elem->id);
+                p->children = elem->children;
+                elem->children = NULL;
+                tree_Delete(&elem);
+                *pos = NULL;
+            }
+            else{
+                /* phi <-> true = phi */
+                elem = (tree*) (*prev)->element;
+                p->children = NULL;
+                (*prev)->element = NULL;
+                list_Delete(&p->children);
+                list_Delete(prev);
+                p->op = elem->op;
+                if(tree_Id(elem)) p->id = strdup(elem->id);
+                p->children = elem->children;
+                elem->children = NULL;
+                tree_Delete(&elem);
+                *prev = *pos = NULL;
+            }
             break;
         case UNTIL:
-            if(((tree*)p->children->element)->op == TRUE){
+            if(*prev == NULL){
                 /* true until phi = sometime phi */
                 p->op = SOMETIME;
                 p->children = (*pos)->next;
@@ -123,11 +185,8 @@ void truthSimplification(tree **formula, list **prev, list **pos){
             }
             else {
                 /* phi until true = true */
-                p->op = op;
-                list_Delete(&(p->children));
-                *pos = *prev = NULL;
+                tree_ReplaceParent(op, p, prev, pos);
             }
-
             break;
     }
     if(p != NULL && p->parent != NULL){
@@ -179,28 +238,85 @@ void falseSimplification(tree **formula, list **prev,  list **pos){
             else p->children = *prev;
             break;
         case NOT:
-            op = TRUE;
+            tree_ReplaceParent(TRUE, p, prev, pos);
+            break;
         case ALWAYS:
+            tree_ReplaceParent(op, p, prev, pos);
+            break;
         case NEXT:
+            tree_ReplaceParent(op, p, prev, pos);
+            break;
         case SOMETIME:
+            tree_ReplaceParent(op, p, prev, pos);
+            break;
         case AND:
-            /* Replace parent by false */
-            p->op = op;
-            list_Delete(&(p->children));
-            *pos = *prev = NULL;
+            tree_ReplaceParent(op, p, prev, pos);
+            break;
+        case IMPLICATION:
+            if(*prev == NULL){
+                /* false -> phi = true */
+                tree_ReplaceParent(TRUE, p, prev, pos);
+            }
+            else{
+                /* phi -> false = not phi */
+                p->op = NOT;
+                *pos = *prev;
+                list_Delete(&(*pos)->next);
+                p->children = *pos;
+                *prev = NULL;
+            }
+        case EQUIVALENCE:
+            if(*prev == NULL){
+                /* false <-> phi = not phi */
+                p->op = NOT;
+                p->children = (*pos)->next;
+                (*pos)->next = NULL;
+                list_Delete(pos);
+                *pos = p->children;
+            }
+            else{
+                /* phi <-> false = not phi */
+                p->op = NOT;
+                *pos = *prev;
+                list_Delete(&(*pos)->next);
+                p->children = *pos;
+                *prev = NULL;
+            }
             break;
         case UNTIL:
-            /* false until phi = phi */
-            /* phi until false = false */
+            if(*prev == NULL){
+                /* false until phi = phi */
+            }
+            else{
+                /* phi until false = false */
+                tree_ReplaceParent(op, p, prev, pos);
+            }
             break;
         case UNLESS:
-            /* false unless phi = phi */
-            /* phi unless false = always phi */
+            if(*prev == NULL){
+                /* false unless phi = phi */
+            }
+            else{
+                /* phi unless false = always phi */
+                p->op = ALWAYS;
+                *pos = *prev;
+                list_Delete(&(*pos)->next);
+                p->children = *pos;
+                *prev = NULL;
+            }
             break;
     }
     if(p != NULL && p->parent != NULL){
         mergesort(&p->parent->children);
     }
+}
+
+void sometimeSimplification(tree **formula, list **prev, list **pos){
+    if(*formula == NULL) return;
+}
+
+void alwaysSimplification(tree **formula, list **prev, list **pos){
+    if(*formula == NULL) return;
 }
 
 int checkEquality(list *subf1, list *subf2){

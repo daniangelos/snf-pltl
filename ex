@@ -1,1 +1,1 @@
-a | p | ~a
+q & ((q | r) unless false)

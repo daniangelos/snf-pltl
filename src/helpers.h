@@ -76,6 +76,7 @@ void tree_SetId(char *id, tree *t);
 char* tree_Id(tree *t);
 list* tree_Children(tree *t);
 tree* tree_Parent(tree *t);
+void tree_ReplaceParent(int op, tree *parent, list **prev, list **pos);
 void tree_SetChildren(tree *t, list *children);
 void tree_SetParent(tree *t, tree *parent) ;
 void tree_AddChild(tree *t, tree *child) ;

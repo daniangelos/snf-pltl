@@ -385,6 +385,13 @@ tree* tree_Parent(tree *t) {
 	return t->parent;
 }
 
+/* Replace parent by op */
+void tree_ReplaceParent(int op, tree *parent, list **prev, list **pos){
+    parent->op = op;
+    list_Delete(&parent->children);
+    *pos = *prev = NULL;
+}
+
 void tree_SetChildren(tree *t, list *children) {
 	t->children = children;
 	for(list *it = children; !list_IsEmpty(it); it = list_Tail(it)) {

@@ -58,16 +58,12 @@ int main(int argc, char** argv) {
 
     printf("Initial formulae:\n");
     list_Print(formula_list);
-    printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
-    list_Sort(&formula_list);
-    mergesort(&formula_list);
-    printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
-    printf("Formulae after sorting:\n");
-    list_Print(formula_list);
 
     printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
     do{
         simplified = 0;
+        list_Sort(&formula_list);
+        mergesort(&formula_list);
         simplification(formula_list);
     } while(simplified && !list_IsEmpty(formula_list));
 
