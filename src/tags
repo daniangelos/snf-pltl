@@ -153,6 +153,8 @@ NOT	parser.tab.h	/^    NOT = 261,$/;"	e	enum:yytokentype
 NO_DECLTYPE	uthash.h	41;"	d
 NO_DECLTYPE	uthash.h	45;"	d
 OBJS	Makefile	/^OBJS = $(SRCS:.c=.o)$/;"	m
+OFF	main.c	9;"	d	file:
+ON	main.c	8;"	d	file:
 OR	parser.tab.c	/^    OR = 264,$/;"	e	enum:yytokentype	file:
 OR	parser.tab.h	/^    OR = 264,$/;"	e	enum:yytokentype
 OR_TEXT	parser.tab.c	/^    OR_TEXT = 265,$/;"	e	enum:yytokentype	file:
@@ -166,7 +168,8 @@ RIGHT_BRACKET	parser.tab.c	/^    RIGHT_BRACKET = 274,$/;"	e	enum:yytokentype	fil
 RIGHT_BRACKET	parser.tab.h	/^    RIGHT_BRACKET = 274,$/;"	e	enum:yytokentype
 RIGHT_SQUARE_BRACKET	parser.tab.c	/^    RIGHT_SQUARE_BRACKET = 277$/;"	e	enum:yytokentype	file:
 RIGHT_SQUARE_BRACKET	parser.tab.h	/^    RIGHT_SQUARE_BRACKET = 277$/;"	e	enum:yytokentype
-SIMPFIRSTRULE	simpl.h	7;"	d
+RULETRACKER_H	ruletracker.h	2;"	d
+SIMPFIRSTRULE	simpl.h	8;"	d
 SIMPL_H	simpl.h	2;"	d
 SNF_H	snf.h	2;"	d
 SOMETIME	parser.tab.c	/^    SOMETIME = 270,$/;"	e	enum:yytokentype	file:
@@ -174,6 +177,7 @@ SOMETIME	parser.tab.h	/^    SOMETIME = 270,$/;"	e	enum:yytokentype
 SRCS	Makefile	/^SRCS=helpers.c snf.c renaming.c simpl.c main.c$/;"	m
 SortedMerge	helpers.c	/^list* SortedMerge(list* a, list* b)$/;"	f
 TARGET	Makefile	/^TARGET=pltl$/;"	m
+TOTALRULES	ruletracker.h	4;"	d
 TRUE	parser.tab.c	/^    TRUE = 259,$/;"	e	enum:yytokentype	file:
 TRUE	parser.tab.h	/^    TRUE = 259,$/;"	e	enum:yytokentype
 UINT16_MAX	lex.yy.c	80;"	d	file:
@@ -338,6 +342,7 @@ _Noreturn	parser.tab.c	246;"	d	file:
 _Noreturn	parser.tab.c	248;"	d	file:
 __STDC_LIMIT_MACROS	lex.yy.c	39;"	d	file:
 alloca	parser.tab.c	293;"	d	file:
+alwaysSimplification	simpl.c	/^void alwaysSimplification(tree **formula, list **prev, list **pos){$/;"	f
 binary_formula	parser.y	/^binary_formula:$/;"	l
 bloom_bv	uthash.h	/^   uint8_t *bloom_bv;$/;"	m	struct:UT_hash_table
 bloom_nbits	uthash.h	/^   uint8_t bloom_nbits;$/;"	m	struct:UT_hash_table
@@ -356,8 +361,8 @@ ctree	parser.tab.c	/^ struct tree* ctree;$/;"	m	union:YYSTYPE	typeref:struct:YYS
 ctree	parser.tab.h	/^ struct tree* ctree;$/;"	m	union:YYSTYPE	typeref:struct:YYSTYPE::tree
 element	helpers.h	/^	void *element;$/;"	m	struct:list
 expand_mult	uthash.h	/^   unsigned expand_mult;$/;"	m	struct:UT_hash_bucket
-falseParenting	simpl.c	/^void falseParenting(tree **formula, list **prev,  list **pos){$/;"	f
-findRepeated	simpl.c	/^void findRepeated(int op, list *children){$/;"	f
+falseSimplification	simpl.c	/^void falseSimplification(tree **formula, list **prev,  list **pos){$/;"	f
+findRepeated	simpl.c	/^void findRepeated(int op, tree *parent, list *children){$/;"	f
 flex_int16_t	lex.yy.c	/^typedef int16_t flex_int16_t;$/;"	t	file:
 flex_int16_t	lex.yy.c	/^typedef short int flex_int16_t;$/;"	t	file:
 flex_int32_t	lex.yy.c	/^typedef int flex_int32_t;$/;"	t	file:
@@ -372,6 +377,8 @@ flex_uint8_t	lex.yy.c	/^typedef uint8_t flex_uint8_t;$/;"	t	file:
 flex_uint8_t	lex.yy.c	/^typedef unsigned char flex_uint8_t; $/;"	t	file:
 formula	parser.y	/^formula:$/;"	l
 formula_Compare	helpers.c	/^int formula_Compare(tree* a, tree* b){$/;"	f
+formula_Negate	helpers.c	/^void formula_Negate(tree **formula){$/;"	f
+formula_SNF	helpers.c	/^tree* formula_SNF(char *id, tree *formula){$/;"	f
 formula_list	parser.tab.c	/^list *formula_list = NULL;$/;"	v
 formula_list_at_least_two	parser.y	/^formula_list_at_least_two:$/;"	l
 formulae	parser.y	/^formulae:$/;"	l
@@ -389,7 +396,6 @@ id	helpers.h	/^	char *id;$/;"	m	struct:tree
 id	helpers.h	/^    char *id;$/;"	m	struct:symbol_table
 ideal_chain_maxlen	uthash.h	/^   unsigned ideal_chain_maxlen;$/;"	m	struct:UT_hash_table
 ineff_expands	uthash.h	/^   unsigned ineff_expands, noexpand;$/;"	m	struct:UT_hash_table
-initializeRules	simpl.c	/^void initializeRules(){$/;"	f
 key	uthash.h	/^   void *key;                        \/* ptr to enclosing struct's key  *\/$/;"	m	struct:UT_hash_handle
 keylen	uthash.h	/^   unsigned keylen;                  \/* enclosing struct's key len     *\/$/;"	m	struct:UT_hash_handle
 list	helpers.h	/^struct list {$/;"	s
@@ -412,6 +418,7 @@ list_UnifyTail	helpers.c	/^void list_UnifyTail(list **l, list **tail, tree *elem
 log2_num_buckets	uthash.h	/^   unsigned num_buckets, log2_num_buckets;$/;"	m	struct:UT_hash_table
 main	main.c	/^int main(int argc, char** argv) {$/;"	f
 mergesort	helpers.c	/^void mergesort(list** headRef)$/;"	f
+negated_variant_one	snf.c	/^tree* negated_variant_one(char *symbol, tree* formula){$/;"	f
 next	helpers.h	/^	list *next;$/;"	m	struct:list
 next	uthash.h	/^   void *next;                       \/* next element in app order      *\/$/;"	m	struct:UT_hash_handle
 noexpand	uthash.h	/^   unsigned ineff_expands, noexpand;$/;"	m	struct:UT_hash_table
@@ -423,13 +430,16 @@ op	helpers.h	/^	int op;$/;"	m	struct:tree
 op_Print	helpers.c	/^void op_Print(int op){$/;"	f
 parent	helpers.h	/^	tree *parent;$/;"	m	struct:tree
 prev	uthash.h	/^   void *prev;                       \/* prev element in app order      *\/$/;"	m	struct:UT_hash_handle
+rule	ruletracker.h	/^int rule[TOTALRULES];$/;"	v
+rules_InitializeCounter	ruletracker.c	/^void rules_InitializeCounter(){$/;"	f
+ruletracker	main.c	/^int ruletracker = OFF;$/;"	v
 short	parser.tab.c	171;"	d	file:
 signature	uthash.h	/^   uint32_t signature; \/* used only to find hash tables in external analysis *\/$/;"	m	struct:UT_hash_table
 simplStep	simpl.c	/^void simplStep(tree **formula, list **prev, list **pos){$/;"	f
 simplification	simpl.c	/^void simplification(list *formulae){$/;"	f
 simplified	simpl.h	/^int simplified;$/;"	v
-simplrules	simpl.h	/^int simplrules[45];$/;"	v
 snf	snf.c	/^void snf(list *formulae){$/;"	f
+sometimeSimplification	simpl.c	/^void sometimeSimplification(tree **formula, list **prev, list **pos){$/;"	f
 st	parser.tab.c	/^symbol_table *st = NULL;$/;"	v
 st_Delete	helpers.c	/^void st_Delete(symbol_table **st){$/;"	f
 st_InsertEntry	helpers.c	/^void st_InsertEntry(char *name, symbol_table **st){$/;"	f
@@ -449,13 +459,14 @@ tree_New	helpers.c	/^tree* tree_New() {$/;"	f
 tree_Op	helpers.c	/^int tree_Op(tree *t)$/;"	f
 tree_Parent	helpers.c	/^tree* tree_Parent(tree *t) {$/;"	f
 tree_Print	helpers.c	/^void tree_Print(tree *t)$/;"	f
+tree_ReplaceParent	helpers.c	/^void tree_ReplaceParent(int op, tree *parent, list **prev, list **pos){$/;"	f
 tree_SetChildren	helpers.c	/^void tree_SetChildren(tree *t, list *children) {$/;"	f
 tree_SetId	helpers.c	/^void tree_SetId(char *id, tree *t){$/;"	f
 tree_SetOp	helpers.c	/^void tree_SetOp(int op, tree *t){$/;"	f
 tree_SetParent	helpers.c	/^void tree_SetParent(tree *t, tree *parent) {$/;"	f
 tree_TreeId	helpers.c	/^tree* tree_TreeId(char *id){$/;"	f
 tree_TreeOp	helpers.c	/^tree* tree_TreeOp(int op) {$/;"	f
-truthParenting	simpl.c	/^void truthParenting(tree **formula, list **prev, list **pos){$/;"	f
+truthSimplification	simpl.c	/^void truthSimplification(tree **formula, list **prev, list **pos){$/;"	f
 uint32_t	uthash.h	/^typedef unsigned int uint32_t;$/;"	t
 uint8_t	uthash.h	/^typedef unsigned char uint8_t;$/;"	t
 unary_formula	parser.y	/^unary_formula:$/;"	l

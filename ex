@@ -1,1 +1,1 @@
-q & ((q | r) unless false)
+p & always sometime always (phi | p)

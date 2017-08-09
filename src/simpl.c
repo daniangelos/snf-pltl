@@ -54,11 +54,11 @@ void simplStep(tree **formula, list **prev, list **pos){
             simplification((*formula)->children);
             break;
         case ALWAYS:
-            alwaysSimplification(formula, prev, pos);
+            alwaysSimplification(formula, pos);
             simplification((*formula)->children);
             break;
         case SOMETIME:
-            sometimeSimplification(formula, prev, pos);
+            sometimeSimplification(formula, pos);
             simplification((*formula)->children);
             break;
         default:
@@ -286,6 +286,17 @@ void falseSimplification(tree **formula, list **prev,  list **pos){
         case UNTIL:
             if(*prev == NULL){
                 /* false until phi = phi */
+                elem = (tree*) (*pos)->next->element;
+                p->children = NULL;
+                (*pos)->next->element = NULL;
+                list_Delete(&p->children);
+                list_Delete(pos);
+                p->op = elem->op;
+                if(tree_Id(elem)) p->id = strdup(elem->id);
+                p->children = elem->children;
+                elem->children = NULL;
+                tree_Delete(&elem);
+                *pos = NULL;
             }
             else{
                 /* phi until false = false */
@@ -295,6 +306,17 @@ void falseSimplification(tree **formula, list **prev,  list **pos){
         case UNLESS:
             if(*prev == NULL){
                 /* false unless phi = phi */
+                elem = (tree*) (*pos)->next->element;
+                p->children = NULL;
+                (*pos)->next->element = NULL;
+                list_Delete(&p->children);
+                list_Delete(pos);
+                p->op = elem->op;
+                if(tree_Id(elem)) p->id = strdup(elem->id);
+                p->children = elem->children;
+                elem->children = NULL;
+                tree_Delete(&elem);
+                *pos = NULL;
             }
             else{
                 /* phi unless false = always phi */
@@ -311,12 +333,70 @@ void falseSimplification(tree **formula, list **prev,  list **pos){
     }
 }
 
-void sometimeSimplification(tree **formula, list **prev, list **pos){
+void sometimeSimplification(tree **formula, list ** pos){
     if(*formula == NULL) return;
+
+    list *children = (*formula)->children;
+    if(children == NULL) return;
+
+    tree *elem = (tree*) children->element;
+    list *grandchild = NULL;
+    int op = elem->op;
+
+    switch(op){
+        case ALWAYS:
+            grandchild = elem->children;
+            if(grandchild != NULL && 
+                    ((tree*)grandchild->element)->op == SOMETIME){
+                /* sometime always sometime phi = always sometime phi */
+                simplified = 1;
+                (*formula)->op = ALWAYS;
+                (*formula)->children = elem->children;
+                elem->children = NULL;
+                list_Delete(&children);
+            }
+            break;
+        case SOMETIME:
+            /* sometime sometime phi = sometime phi */
+            simplified = 1;
+            (*formula)->children = elem->children;
+            elem->children = NULL;
+            list_Delete(&children);
+            break;
+    }
+
 }
 
-void alwaysSimplification(tree **formula, list **prev, list **pos){
+void alwaysSimplification(tree **formula, list ** pos){
     if(*formula == NULL) return;
+
+    list *children = (*formula)->children;
+    if(children == NULL) return;
+
+    tree *elem = (tree*) children->element;
+    list *grandchild = NULL;
+    int op = elem->op;
+
+    switch(op){
+        case ALWAYS:
+            /* always always phi = always phi */
+            simplified = 1;
+            (*formula)->children = elem->children;
+            elem->children = NULL;
+            list_Delete(&children);
+            break;
+        case SOMETIME:
+            grandchild = elem->children;
+            if(grandchild != NULL && 
+                    ((tree*)grandchild->element)->op == ALWAYS){
+                /* always sometime always phi = sometime always phi */
+                (*formula)->op = SOMETIME;
+                (*formula)->children = elem->children;
+                elem->children = NULL;
+                list_Delete(&children);
+            }
+            break;
+    }
 }
 
 int checkEquality(list *subf1, list *subf2){
