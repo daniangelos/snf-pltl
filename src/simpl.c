@@ -190,7 +190,9 @@ void truthSimplification(tree **formula, list **prev, list **pos){
             break;
     }
     if(p != NULL && p->parent != NULL){
-        mergesort(&p->parent->children);
+        int op = p->parent->op;
+        if(op >= 262 && op <= 265) 
+            mergesort(&p->parent->children);
     }
 }
 
@@ -230,7 +232,9 @@ void falseSimplification(tree **formula, list **prev,  list **pos){
                     tree_Delete(&elem);
                     *pos = *prev = NULL;
                     if(p->parent != NULL){
-                        mergesort(&p->parent->children);
+                        op = p->parent->op;
+                        if(op >= 262 && op <= 265) 
+                            mergesort(&p->parent->children);
                     }
                 }
                 else p->children = *pos;
@@ -329,7 +333,9 @@ void falseSimplification(tree **formula, list **prev,  list **pos){
             break;
     }
     if(p != NULL && p->parent != NULL){
-        mergesort(&p->parent->children);
+        op = p->parent->op;
+        if(op >= 262 && op <= 265) 
+            mergesort(&p->parent->children);
     }
 }
 
@@ -352,6 +358,7 @@ void sometimeSimplification(tree **formula, list ** pos){
                 simplified = 1;
                 (*formula)->op = ALWAYS;
                 (*formula)->children = elem->children;
+                ((tree*) (*formula)->children->element)->parent = *formula;
                 elem->children = NULL;
                 list_Delete(&children);
             }
@@ -360,6 +367,7 @@ void sometimeSimplification(tree **formula, list ** pos){
             /* sometime sometime phi = sometime phi */
             simplified = 1;
             (*formula)->children = elem->children;
+            ((tree*) (*formula)->children->element)->parent = *formula;
             elem->children = NULL;
             list_Delete(&children);
             break;
@@ -382,6 +390,7 @@ void alwaysSimplification(tree **formula, list ** pos){
             /* always always phi = always phi */
             simplified = 1;
             (*formula)->children = elem->children;
+            ((tree*) (*formula)->children->element)->parent = *formula;
             elem->children = NULL;
             list_Delete(&children);
             break;
@@ -392,6 +401,7 @@ void alwaysSimplification(tree **formula, list ** pos){
                 /* always sometime always phi = sometime always phi */
                 (*formula)->op = SOMETIME;
                 (*formula)->children = elem->children;
+                ((tree*) (*formula)->children->element)->parent = *formula;
                 elem->children = NULL;
                 list_Delete(&children);
             }
@@ -534,7 +544,9 @@ void findRepeated(int op, tree *parent, list *children){
                     abort();
             }
             if(parent != NULL && parent->parent != NULL){
-                mergesort(&parent->parent->children);
+                op = parent->parent->op;
+                if(op >= 262 && op <= 265) 
+                    mergesort(&parent->parent->children);
             }
         }
         if(it == NULL || it->next == NULL) break;
@@ -555,7 +567,9 @@ void checkUnarity(tree *formula){
         if(tree_Id(elem)) {formula->id = elem->id; elem->id = NULL;}
         list_Delete(&it);
         if(formula->parent != NULL){
-            mergesort(&formula->parent->children);
+            int op = formula->parent->op;
+            if(op >= 262 && op <= 265) 
+                mergesort(&formula->parent->children);
         }
     }
 }

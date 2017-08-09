@@ -60,9 +60,9 @@ int main(int argc, char** argv) {
     list_Print(formula_list);
 
     printf("~~~~~~~~~~~~~~~~~~~~~~~\n");
+    list_Sort(&formula_list);
     do{
         simplified = 0;
-        list_Sort(&formula_list);
         mergesort(&formula_list);
         simplification(formula_list);
     } while(simplified && !list_IsEmpty(formula_list));

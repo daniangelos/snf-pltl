@@ -1,1 +1,1 @@
-p & always sometime always (phi | p)
+sometime always sometime (true)
